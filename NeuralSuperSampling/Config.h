@@ -16,6 +16,7 @@
 #define NSS_FRAMES 3
 #define NSS_CHANNELS 4
 #define NSS_MODEL_KEY @"{\"isegment\":0,\"inputs\":{\"input_1\":{\"shape\":[12,1280,1,720,1]}},\"outputs\":{\"Identity\":{\"shape\":[3,1280,1,720,1]}}}"
-#define NSS_MODEL_NAME @"NSS2x"
+#define NSS_MODEL_NAME @"NeuralSuperResolution3F720p4PF"
+#define NSS_TIMING 0
 
 #endif /* Config_h */

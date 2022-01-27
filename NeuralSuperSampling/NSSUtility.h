@@ -8,11 +8,16 @@
 #ifndef NSSUtility_h
 #define NSSUtility_h
 
+#import <Foundation/Foundation.h>
+#import <IOSurface/IOSurface.h>
+
 #define RAISE_EXCEPTION_ON_ERROR(err, name) \
     if (err) { \
         [NSException raise:name format:@"Error while initializing metal preprocessor: %@", err]; \
     }
 
 #define RAISE_EXCEPTION(name) RAISE_EXCEPTION_ON_ERROR([NSError new], name)
+
+void debug_dumpIOSurfaceToFile(NSString* path, IOSurfaceRef surface);
 
 #endif /* NSSUtility_h */

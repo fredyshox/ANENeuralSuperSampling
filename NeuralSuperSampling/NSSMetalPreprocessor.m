@@ -9,7 +9,7 @@
 #import "NSSUtility.h"
 
 const NSString* kZeroUpsamplingFunctionName = @"zero_upsampling";
-const NSString* kWarpFunctionName = @"backward_image_warp_buffer";
+const NSString* kWarpFunctionName = @"backward_image_warp";
 const NSString* kCopyFunctionName = @"copy_texture_to_buffer";
 
 @implementation NSSMetalPreprocessor {
@@ -81,22 +81,44 @@ const NSString* kCopyFunctionName = @"copy_texture_to_buffer";
     [upsamplingCommandEncoder endEncoding];
 }
 
-- (void)warpColorTexture:(id<MTLTexture>)colorTexture depthTexture:(id<MTLTexture>)depthTexture motionTexture:(id<MTLTexture>)motionTexture outputBuffer:(id<MTLBuffer>)buffer withCommandBuffer:(id<MTLCommandBuffer>)commandBuffer {
+- (void)warpInputTexture:(id<MTLTexture>)inputTexture motionTexture:(id<MTLTexture>)motionTexture outputTexture:(id<MTLTexture>)outputTexture withCommandBuffer:(id<MTLCommandBuffer>)commandBuffer {
     id<MTLComputeCommandEncoder> warpCommandEncoder = [commandBuffer computeCommandEncoderWithDispatchType:MTLDispatchTypeSerial];
     if (warpCommandEncoder == nil) {
         return;
     }
     
-    MTLSize initialGridSize = MTLSizeMake(colorTexture.width, colorTexture.height, 1);
+    MTLSize initialGridSize = MTLSizeMake(inputTexture.width, inputTexture.height, 1);
     MTLSize warpThreadgroup = [self calculateThreadsPerThreadgroupForPipelineState:warpPipeline];
     
     [warpCommandEncoder setComputePipelineState:warpPipeline];
-    [warpCommandEncoder setTexture:colorTexture atIndex:0];
-    [warpCommandEncoder setTexture:depthTexture atIndex:1];
-    [warpCommandEncoder setTexture:motionTexture atIndex:2];
-    [warpCommandEncoder setBuffer:buffer offset:0 atIndex:0];
+    [warpCommandEncoder setTexture:inputTexture atIndex:0];
+    [warpCommandEncoder setTexture:motionTexture atIndex:1];
+    [warpCommandEncoder setTexture:outputTexture atIndex:2];
     [warpCommandEncoder dispatchThreads:initialGridSize threadsPerThreadgroup:warpThreadgroup];
     [warpCommandEncoder endEncoding];
+}
+
+- (void)copyColorTexture:(id<MTLTexture>)colorTexture depthTexture:(id<MTLTexture>) depthTexture outputBuffer:(id<MTLBuffer>)buffer outputBufferOffset:(NSUInteger)offset withCommandBuffer:(id<MTLCommandBuffer>)commandBuffer {
+    assert(colorTexture.width == depthTexture.width && colorTexture.height == depthTexture.height);
+    MTLSize initialGridSize = MTLSizeMake(colorTexture.width, colorTexture.height, 1);
+    MTLSize copyThreadgroup = [self calculateThreadsPerThreadgroupForPipelineState:copyPipeline];
+    
+    id<MTLComputeCommandEncoder> copyColorCommandEncoder = [commandBuffer computeCommandEncoderWithDispatchType:MTLDispatchTypeSerial];
+    assert(copyColorCommandEncoder != nil);
+    [copyColorCommandEncoder setComputePipelineState:copyPipeline];
+    [copyColorCommandEncoder setTexture:colorTexture atIndex:0];
+    [copyColorCommandEncoder setBuffer:buffer offset:offset*sizeof(__fp16) atIndex:0];
+    [copyColorCommandEncoder dispatchThreads:initialGridSize threadsPerThreadgroup:copyThreadgroup];
+    [copyColorCommandEncoder endEncoding];
+
+    id<MTLComputeCommandEncoder> copyDepthCommandEncoder = [commandBuffer computeCommandEncoderWithDispatchType:MTLDispatchTypeSerial];
+    assert(copyDepthCommandEncoder != nil);
+    NSUInteger depthOffset = (offset+3);
+    [copyDepthCommandEncoder setComputePipelineState:copyPipeline];
+    [copyDepthCommandEncoder setTexture:depthTexture atIndex:0];
+    [copyDepthCommandEncoder setBuffer:buffer offset:depthOffset*sizeof(__fp16) atIndex:0];
+    [copyDepthCommandEncoder dispatchThreads:initialGridSize threadsPerThreadgroup:copyThreadgroup];
+    [copyDepthCommandEncoder endEncoding];
 }
 
 -(MTLSize)calculateThreadsPerThreadgroupForPipelineState:(id<MTLComputePipelineState>)pipelineState {
@@ -105,31 +127,6 @@ const NSString* kCopyFunctionName = @"copy_texture_to_buffer";
     MTLSize threadsPerThreadgroup = MTLSizeMake(w, h, 1);
     
     return threadsPerThreadgroup;
-}
-
-- (void)copyColorTexture:(id<MTLTexture>)colorTexture depthTexture:(id<MTLTexture>) depthTexture outputBuffer:(id<MTLBuffer>)buffer withCommandBuffer:(id<MTLCommandBuffer>)commandBuffer {
-    id<MTLComputeCommandEncoder> copyColorCommandEncoder = [commandBuffer computeCommandEncoderWithDispatchType:MTLDispatchTypeSerial];
-    id<MTLComputeCommandEncoder> copyDepthCommandEncoder = [commandBuffer computeCommandEncoderWithDispatchType:MTLDispatchTypeSerial];
-    if (copyColorCommandEncoder == nil || copyDepthCommandEncoder == nil) {
-        return;
-    }
-    
-    assert(colorTexture.width == depthTexture.width && colorTexture.height == depthTexture.height);
-    MTLSize initialGridSize = MTLSizeMake(colorTexture.width, colorTexture.height, 1);
-    MTLSize copyThreadgroup = [self calculateThreadsPerThreadgroupForPipelineState:copyPipeline];
-    
-    [copyColorCommandEncoder setComputePipelineState:copyPipeline];
-    [copyColorCommandEncoder setTexture:colorTexture atIndex:0];
-    [copyColorCommandEncoder setBuffer:buffer offset:0 atIndex:0];
-    [copyColorCommandEncoder dispatchThreads:initialGridSize threadsPerThreadgroup:copyThreadgroup];
-    [copyColorCommandEncoder endEncoding];
-    
-    NSUInteger depthOffset = 3*sizeof(__fp16);
-    [copyDepthCommandEncoder setComputePipelineState:copyPipeline];
-    [copyDepthCommandEncoder setTexture:depthTexture atIndex:0];
-    [copyDepthCommandEncoder setBuffer:buffer offset:depthOffset atIndex:0];
-    [copyDepthCommandEncoder dispatchThreads:initialGridSize threadsPerThreadgroup:copyThreadgroup];
-    [copyDepthCommandEncoder endEncoding];
 }
 
 @end

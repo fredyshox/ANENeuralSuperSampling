@@ -78,7 +78,7 @@ extern "C" void UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API SetOutputTextureFromU
 
 // MARK: SuperSampling
 
-static void PerformSuperSampling() {
+static void UNITY_INTERFACE_API PerformSuperSampling(int eventID) {
     if (!VALID_INPUT_TEXTURES) {
         printf("Input textures not set!\n");
         return;
@@ -89,5 +89,17 @@ static void PerformSuperSampling() {
         return;
     }
     
+    if (s_CurrentAPI == NULL) {
+        printf("Render API is null!\n");
+        return;
+    }
+    
     s_CurrentAPI->PerformSuperSampling(g_colorTextureHandle, g_depthTextureHandle, g_motionTextureHandle, g_outputTextureHandle);
+}
+
+
+// MARK: Render callback & callback getter
+
+extern "C" UnityRenderingEvent UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API GetRenderEventFunc() {
+    return PerformSuperSampling;
 }

@@ -19,7 +19,7 @@
 }
 
 - (size_t)pixelStride {
-    return IOSurfaceGetBytesPerRow(_surface);
+    return IOSurfaceGetBytesPerRow(_surface) / sizeof(__fp16);
 }
 
 - (size_t)length {

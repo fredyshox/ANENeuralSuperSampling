@@ -62,16 +62,30 @@ void NSSRenderApi_ANEMetal::PerformSuperSampling(void* colorTexPtr, void* depthT
     id<MTLTexture> depthTexture = (__bridge id<MTLTexture>)depthTexPtr;
     id<MTLTexture> motionTexture = (__bridge id<MTLTexture>)motionTexPtr;
     id<MTLTexture> outputTexture = (__bridge id<MTLTexture>)outputTexPtr;
-    NSSInput input = NSSInputMake(colorTexture, depthTexture, motionTexture);
+    NSSInput input = {colorTexture, depthTexture, motionTexture};
     
     id<MTLCommandBuffer> currentCommandBuffer = _metalGraphics->CurrentCommandBuffer();
-    id<MTLCommandQueue> commandQueue = [currentCommandBuffer commandQueue];
-    
-    // commit current command buffer
     _metalGraphics->EndCurrentCommandEncoder();
-    [currentCommandBuffer commit];
+    [_upscaler processInput:input outputTexture:outputTexture usingCommandBuffer:currentCommandBuffer];
     
-    [_upscaler processInput:input outputTexture:outputTexture usingCommandQueue:commandQueue];
-}
+    //id<MTLFence> upscalingFence = [_metalGraphics->MetalDevice() newFence];
+    
+    // add synchronization to wait for compute commands to complete
+//    id<MTLBlitCommandEncoder> emptyCommandEncoder = [renderingBuffer blitCommandEncoder];
+//    [emptyCommandEncoder waitForFence:upscalingFence];
+//    [emptyCommandEncoder endEncoding];
+//    [renderingBuffer enqueue];
 
+//    _metalGraphics->EndCurrentCommandEncoder();
+//    [currentCommandBuffer encodeSignalEvent:_syncEvent value:0];
+//    [currentCommandBuffer encodeWaitForEvent:_syncEvent value:1];
+//    [currentCommandBuffer enqueue];
+//
+//    // upscale
+//    [_upscaler processInput:input
+//              outputTexture:outputTexture
+//          usingCommandQueue:commandQueue
+//             upscalingFence:nil
+//             upscalingEvent:_syncEvent];
+}
 #endif

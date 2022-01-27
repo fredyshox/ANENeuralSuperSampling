@@ -8,6 +8,7 @@
 #import "NSSANEReconstructor.h"
 #import "AppleNeuralEngine/AppleNeuralEngine.h"
 #import <dlfcn.h>
+#import <TargetConditionals.h>
 
 static void *aneFrameworkLibHandle;
 
@@ -19,10 +20,15 @@ static void *aneFrameworkLibHandle;
 }
 
 + (void)initialize {
+    [_ANEClient initialize];
+    [_ANEClient sharedConnection];
+    
+    #if TARGET_OS_IOS
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         aneFrameworkLibHandle = dlopen("/System/Library/PrivateFrameworks/AppleNeuralEngine.framework/AppleNeuralEngine", RTLD_NOW);
     });
+    #endif
 }
 
 - (id)initWithMilUrl:(NSURL*)milUrl modelKey:(NSString*)key {
@@ -42,7 +48,6 @@ static void *aneFrameworkLibHandle;
     NSLog(@"Compiled ANE model exists: %d key: %@", res, [model key]);
     if (!res) {
         NSLog(@"Compiling ANE model");
-        qos_class_t
         res = [client compileModel: model options: @{} qos: QOS_CLASS_USER_INTERACTIVE error: error];
         NSLog(@"Compilation status %d", res);
         if (!res) {
