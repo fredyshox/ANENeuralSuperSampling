@@ -49,42 +49,18 @@ kernel void backward_image_warp(
     texture2d<half, access::write>  outTexture [[texture(2)]], // upsampled texture
     uint2 gid [[thread_position_in_grid]]
 ) {
-    constexpr sampler textureSampler(filter::linear);
+    constexpr sampler motionSampler(coord::normalized, filter::nearest);
+    constexpr sampler textureSampler(coord::pixel, filter::nearest);
     
     if ((gid.x >= outTexture.get_width()) || (gid.y >= outTexture.get_height())) {
         return;
     }
     
     float2 motionCoords = float2(float(gid.x) / inTexture.get_width(), float(gid.y) / inTexture.get_height());
-    half2 motionInGrid = motionTexture.sample(textureSampler, motionCoords).rg;
+    half2 motionInGrid = motionTexture.sample(motionSampler, motionCoords).rg;
     float2 warpedIndex = float2(gid) - float2(motionInGrid);
-    float2 coords = float2(warpedIndex.x / inTexture.get_width(), warpedIndex.y / inTexture.get_height());
-    half4 interpolatedValue = inTexture.sample(textureSampler, coords);
+    half4 interpolatedValue = inTexture.sample(textureSampler, warpedIndex);
+    interpolatedValue.a = 1.0;
     
     outTexture.write(interpolatedValue, gid);
-}
-
-kernel void backward_image_warp_buffer(
-    texture2d<half, access::sample> inTexture [[texture(0)]], // upsampled texture
-    texture2d<half, access::sample> motionTexture [[texture(1)]], // small motion
-    device half* result [[buffer(0)]],
-    uint2 gid [[thread_position_in_grid]]
-) {
-    constexpr sampler textureSampler(filter::linear);
-    
-    if ((gid.x >= inTexture.get_width()) || (gid.y >= inTexture.get_height())) {
-        return;
-    }
-    
-    float2 motionCoords = float2(float(gid.x) / inTexture.get_width(), float(gid.y) / inTexture.get_height());
-    half2 motionInGrid = motionTexture.sample(textureSampler, motionCoords).rg;
-    float2 warpedIndex = float2(gid) - float2(motionInGrid);
-    float2 coords = float2(warpedIndex.x / inTexture.get_width(), warpedIndex.y / inTexture.get_height());
-    half4 interpolatedValue = inTexture.sample(textureSampler, coords);
-    
-    uint indexInResult = gid.x * gid.y * resultStride;
-    result[indexInResult] = ZERO_IF_NAN(interpolatedValue.r);
-    result[indexInResult+1] = ZERO_IF_NAN(interpolatedValue.g);
-    result[indexInResult+2] = ZERO_IF_NAN(interpolatedValue.b);
-    result[indexInResult+3] = ZERO_IF_NAN(interpolatedValue.a);
 }

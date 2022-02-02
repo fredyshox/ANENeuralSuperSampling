@@ -282,6 +282,12 @@ IOSurfaceRef outputSurface(int width, int height) {
                          motionTexture:input.motionTexture
                          outputTexture:previousFrameTargetImmediateDepthTexture
                      withCommandBuffer:commandBuffer];
+//        [preprocessor copyTexture:previousFrameSourceImmediateColorTexture
+//                    outputTexture:previousFrameTargetImmediateColorTexture
+//                withCommandBuffer:commandBuffer];
+//        [preprocessor copyTexture:previousFrameSourceImmediateDepthTexture
+//                    outputTexture:previousFrameTargetImmediateDepthTexture
+//                withCommandBuffer:commandBuffer];
         [preprocessor copyColorTexture:previousFrameTargetImmediateColorTexture
                           depthTexture:previousFrameTargetImmediateDepthTexture
                           outputBuffer:immediateBuffer

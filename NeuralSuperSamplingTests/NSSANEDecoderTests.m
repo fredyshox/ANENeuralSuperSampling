@@ -36,7 +36,7 @@
 }
 
 - (void)testDecoding {
-    static BOOL failOnce = true;
+    BOOL failOnce = true;
     
     MTLTextureDescriptor* outputDescriptor =
         [MTLTextureDescriptor texture2DDescriptorWithPixelFormat:MTLPixelFormatRGBA16Float
@@ -65,7 +65,7 @@
     [commandBuffer waitUntilCompleted];
     
     id<MTLCommandBuffer> outputReadBuffer = [queue commandBuffer];
-    id<MTLBuffer> outputBuffer = texturePixelDataToBuffer(outputReadBuffer, outputTexture, NO);
+    id<MTLBuffer> outputBuffer = texturePixelDataToBuffer(outputReadBuffer, outputTexture, CHANNEL_COUNT_COLOR);
     [outputReadBuffer commit];
     [outputReadBuffer waitUntilCompleted];
     __fp16* rawOutputBuffer = (__fp16*) outputBuffer.contents;

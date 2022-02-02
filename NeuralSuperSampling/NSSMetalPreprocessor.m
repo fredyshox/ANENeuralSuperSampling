@@ -98,6 +98,13 @@ const NSString* kCopyFunctionName = @"copy_texture_to_buffer";
     [warpCommandEncoder endEncoding];
 }
 
+- (void)copyTexture:(id<MTLTexture>)inputTexture outputTexture:(id<MTLTexture>)outputTexture withCommandBuffer:(id<MTLCommandBuffer>)commandBuffer {
+    assert(inputTexture.width == outputTexture.width && inputTexture.height == outputTexture.height);
+    id<MTLBlitCommandEncoder> blitEncoder = [commandBuffer blitCommandEncoder];
+    [blitEncoder copyFromTexture:inputTexture toTexture:outputTexture];
+    [blitEncoder endEncoding];
+}
+
 - (void)copyColorTexture:(id<MTLTexture>)colorTexture depthTexture:(id<MTLTexture>) depthTexture outputBuffer:(id<MTLBuffer>)buffer outputBufferOffset:(NSUInteger)offset withCommandBuffer:(id<MTLCommandBuffer>)commandBuffer {
     assert(colorTexture.width == depthTexture.width && colorTexture.height == depthTexture.height);
     MTLSize initialGridSize = MTLSizeMake(colorTexture.width, colorTexture.height, 1);

@@ -26,8 +26,8 @@ id<MTLBuffer> newBuffer(id<MTLDevice> device, NSUInteger width, NSUInteger heigh
     return buffer;
 }
 
-id<MTLBuffer> texturePixelDataToBuffer(id<MTLCommandBuffer> commandBuffer, id<MTLTexture> texture, BOOL isDepth) {
-    NSUInteger bytesPerPixel = (isDepth ? 1 : 4) * sizeof(__fp16);
+id<MTLBuffer> texturePixelDataToBuffer(id<MTLCommandBuffer> commandBuffer, id<MTLTexture> texture, size_t channelCount) {
+    NSUInteger bytesPerPixel = channelCount * sizeof(__fp16);
     NSUInteger bytesPerRow   = texture.width * bytesPerPixel;
     NSUInteger bytesPerImage = texture.height * bytesPerRow;
     
@@ -48,8 +48,30 @@ id<MTLBuffer> texturePixelDataToBuffer(id<MTLCommandBuffer> commandBuffer, id<MT
     return readBuffer;
 }
 
-void fillTexture(id<MTLTexture> texture, uint8_t value, BOOL isDepth) {
-    size_t bytesPerRow = texture.width * (isDepth ? 1 : 4) * sizeof(__fp16);
+void fillTextureGridX(id<MTLTexture> texture, size_t channelCount) {
+    size_t pixelsPerRow = texture.width * channelCount;
+    size_t bytesPerRow = pixelsPerRow * sizeof(__fp16);
+    size_t bufSize = bytesPerRow * texture.height;
+    __fp16* buffer = (__fp16*)malloc(bufSize);
+    __fp16 value;
+    for (int y = 0; y < texture.height; y++) {
+        value = 1.0 / texture.width;
+        for (int x = 0; x < texture.width; x++) {
+            for (int c = 0; c < channelCount; c++) {
+                buffer[(y * pixelsPerRow) + (x * channelCount) + c] = value;
+            }
+            value += 1.0 / texture.width;
+        }
+    }
+    [texture replaceRegion:MTLRegionMake2D(0, 0, texture.width, texture.height)
+               mipmapLevel:0
+                 withBytes:buffer
+               bytesPerRow:bytesPerRow];
+    free(buffer);
+}
+
+void fillTexture(id<MTLTexture> texture, uint8_t value, size_t channelCount) {
+    size_t bytesPerRow = texture.width * channelCount * sizeof(__fp16);
     size_t bufSize = bytesPerRow * texture.height;
     uint8_t* buffer = (uint8_t*)malloc(bufSize);
     memset(buffer, value, bufSize);
@@ -59,3 +81,5 @@ void fillTexture(id<MTLTexture> texture, uint8_t value, BOOL isDepth) {
                bytesPerRow:bytesPerRow];
     free(buffer);
 }
+
+
