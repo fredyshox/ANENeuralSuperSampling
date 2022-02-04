@@ -7,14 +7,16 @@
 
 #import <Foundation/Foundation.h>
 #import <Metal/Metal.h>
-#import "NSSBuffer.h"
+#import "NSSDecoder.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface NSSANEDecoder : NSObject
+@interface NSSANEDecoder : NSObject <NSSDecoder>
+
 - (id)initWithDevice:(id<MTLDevice>)device yuvToRgbConversion:(BOOL)yuvConversion;
-- (void)attachBuffer:(NSSBuffer*)buffer;
-- (void)decodeIntoTexture:(id<MTLTexture>)texture usingCommandBuffer: (id<MTLCommandBuffer>)commandBuffer updateFence:(_Nullable id<MTLFence>)fence;
+- (void)attachInputBuffer:(NSSBuffer*)buffer;
+- (void)decodeIntoTexture:(id<MTLTexture>)texture usingCommandBuffer: (id<MTLCommandBuffer>)commandBuffer;
+
 @end
 
 NS_ASSUME_NONNULL_END

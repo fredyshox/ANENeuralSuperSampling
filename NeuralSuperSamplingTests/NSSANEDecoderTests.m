@@ -57,10 +57,10 @@
         }
     }
     NSSANEDecoder* decoder = [[NSSANEDecoder alloc] initWithDevice:device yuvToRgbConversion:NO];
-    [decoder attachBuffer: buffer];
+    [decoder attachInputBuffer: buffer];
     
     id<MTLCommandBuffer> commandBuffer = [queue commandBuffer];
-    [decoder decodeIntoTexture: outputTexture usingCommandBuffer: commandBuffer updateFence:nil];
+    [decoder decodeIntoTexture: outputTexture usingCommandBuffer: commandBuffer];
     [commandBuffer commit];
     [commandBuffer waitUntilCompleted];
     

@@ -8,63 +8,63 @@
 #import "NSSANEDecoder.h"
 #import "NSSUtility.h"
 
-const NSString* kConversionFunctionName = @"decode_buffer";
-const NSString* kConversionWithYuvFunctionName = @"decode_buffer_yuv";
+NSString* const kConversionFunctionName = @"decode_buffer";
+NSString* const kConversionWithYuvFunctionName = @"decode_buffer_yuv";
 
 @implementation NSSANEDecoder {
-    id<MTLDevice> device;
-    id<MTLLibrary> library;
-    id<MTLComputePipelineState> pipeline;
-    id<MTLBuffer> inputBuffer;
-    uint32_t inputBufferStride;
-    BOOL yuvConversion;
+    id<MTLDevice> _device;
+    id<MTLLibrary> _library;
+    id<MTLComputePipelineState> _pipeline;
+    id<MTLBuffer> _inputBuffer;
+    uint32_t _inputBufferStride;
+    BOOL _yuvConversion;
 }
 
 - (id)initWithDevice:(id<MTLDevice>)device yuvToRgbConversion:(BOOL)yuvConversion {
     self = [super init];
     if (self) {
-        self->device = device;
-        self->yuvConversion = yuvConversion;
+        self->_device = device;
+        self->_yuvConversion = yuvConversion;
         
         NSError* error = nil;
         NSBundle* bundle = [NSBundle bundleForClass: [self class]];
         id<MTLLibrary> library = [device newDefaultLibraryWithBundle:bundle
                                                                error:&error];
         RAISE_EXCEPTION_ON_ERROR(error, @"MetalLibraryNotFound");
-        self->library = library;
+        self->_library = library;
     }
     
     return self;
 }
 
-- (void)attachBuffer:(NSSBuffer*)buffer {
-    inputBuffer = [device newBufferWithBytesNoCopy:buffer.dataPointer
+- (void)attachInputBuffer:(NSSBuffer*)buffer {
+    _inputBuffer = [_device newBufferWithBytesNoCopy:buffer.dataPointer
                                                   length:buffer.length
                                                  options:MTLResourceStorageModeShared
                                              deallocator:^(void*, NSUInteger) { /* nop */ }];
-    assert(inputBuffer != nil);
-    inputBufferStride = (uint32_t) buffer.pixelStride;
+    assert(_inputBuffer != nil);
+    _inputBufferStride = (uint32_t) buffer.pixelStride;
     MTLFunctionConstantValues* constantValues = [[MTLFunctionConstantValues alloc] init];
-    [constantValues setConstantValue: &inputBufferStride type:MTLDataTypeUInt atIndex:0];
+    [constantValues setConstantValue: &_inputBufferStride type:MTLDataTypeUInt atIndex:0];
     
     id<MTLFunction> conversionFunction;
     NSError* error;
-    if (yuvConversion) {
-        conversionFunction = [library newFunctionWithName:kConversionWithYuvFunctionName
+    if (_yuvConversion) {
+        conversionFunction = [_library newFunctionWithName:kConversionWithYuvFunctionName
                                            constantValues:constantValues
                                                     error:&error];
     } else {
-        conversionFunction = [library newFunctionWithName:kConversionFunctionName
+        conversionFunction = [_library newFunctionWithName:kConversionFunctionName
                                            constantValues:constantValues
                                                     error:&error];
     }
     RAISE_EXCEPTION_ON_ERROR(error, @"MetalLibraryFunctionError");
-    self->pipeline = [device newComputePipelineStateWithFunction:conversionFunction error:&error];
+    self->_pipeline = [_device newComputePipelineStateWithFunction:conversionFunction error:&error];
     RAISE_EXCEPTION_ON_ERROR(error, @"MetalLibraryPipelineStateError");
 }
 
-- (void)decodeIntoTexture:(id<MTLTexture>)texture usingCommandBuffer:(id<MTLCommandBuffer>)commandBuffer updateFence:(_Nullable id<MTLFence>)fence {
-    if (inputBuffer == nil || pipeline == nil) {
+- (void)decodeIntoTexture:(id<MTLTexture>)texture usingCommandBuffer: (id<MTLCommandBuffer>)commandBuffer {
+    if (_inputBuffer == nil || _pipeline == nil) {
         RAISE_EXCEPTION(@"AttachNotCalled");
     }
     
@@ -74,15 +74,12 @@ const NSString* kConversionWithYuvFunctionName = @"decode_buffer_yuv";
     }
     
     MTLSize gridSize = MTLSizeMake(texture.width, texture.height, 1);
-    MTLSize threadgroup = [self calculateThreadsPerThreadgroupForPipelineState:pipeline];
+    MTLSize threadgroup = [self calculateThreadsPerThreadgroupForPipelineState:_pipeline];
     
-    [commandEncoder setComputePipelineState:pipeline];
-    [commandEncoder setBuffer:inputBuffer offset:0 atIndex:0];
+    [commandEncoder setComputePipelineState:_pipeline];
+    [commandEncoder setBuffer:_inputBuffer offset:0 atIndex:0];
     [commandEncoder setTexture:texture atIndex:0];
     [commandEncoder dispatchThreads:gridSize threadsPerThreadgroup:threadgroup];
-    if (fence != nil) {
-        [commandEncoder updateFence:fence];
-    }
     [commandEncoder endEncoding];
 }
 

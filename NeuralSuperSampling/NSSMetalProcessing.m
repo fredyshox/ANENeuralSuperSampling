@@ -1,33 +1,33 @@
 //
-//  NSSMetalPreprocessor.m
+//  NSSMetalProcessing.m
 //  NeuralSuperSampling
 //
 //  Created by Kacper Rączy on 22/11/2021.
 //
 
-#import "NSSMetalPreprocessor.h"
+#import "NSSMetalProcessing.h"
 #import "NSSUtility.h"
 
-const NSString* kZeroUpsamplingFunctionName = @"zero_upsampling";
-const NSString* kWarpFunctionName = @"backward_image_warp";
-const NSString* kCopyFunctionName = @"copy_texture_to_buffer";
+NSString* const kZeroUpsamplingFunctionName = @"zero_upsampling";
+NSString* const kWarpFunctionName = @"backward_image_warp";
+NSString* const kCopyFunctionName = @"copy_texture_to_buffer";
 
-@implementation NSSMetalPreprocessor {
+@implementation NSSMetalProcessing {
     id<MTLLibrary> library;
     id<MTLDevice> device;
     id<MTLComputePipelineState> upsamplingPipeline;
     id<MTLComputePipelineState> warpPipeline;
     id<MTLComputePipelineState> copyPipeline;
-    uint32_t factor;
-    uint32_t resultStride;
+    NSUInteger factor;
+    NSUInteger resultStride;
 }
 
--(id)initWithDevice:(id<MTLDevice>)device descriptor:(NSSPreprocessorDescriptor*)descriptor; {
+- (id)initWithDevice:(id<MTLDevice>)device scaleFactor:(NSUInteger)scaleFactor outputBufferStride:(NSUInteger)outputBufferStride {
     self = [super init];
     if (self) {
         self->device = device;
-        self->factor = descriptor.scaleFactor;
-        self->resultStride = descriptor.outputBufferStride;
+        self->factor = scaleFactor;
+        self->resultStride = outputBufferStride;
         
         NSError* error = nil;
         NSBundle* bundle = [NSBundle bundleForClass: [self class]];
@@ -126,6 +126,16 @@ const NSString* kCopyFunctionName = @"copy_texture_to_buffer";
     [copyDepthCommandEncoder setBuffer:buffer offset:depthOffset*sizeof(__fp16) atIndex:0];
     [copyDepthCommandEncoder dispatchThreads:initialGridSize threadsPerThreadgroup:copyThreadgroup];
     [copyDepthCommandEncoder endEncoding];
+}
+
+- (void)clearTexture:(id<MTLTexture>)texture withCommandBuffer:(id<MTLCommandBuffer>)commandBuffer {
+    MTLRenderPassDescriptor* clearRenderPassDesc = [MTLRenderPassDescriptor renderPassDescriptor];
+    clearRenderPassDesc.colorAttachments[0].clearColor = MTLClearColorMake(0, 0, 0, 0);
+    clearRenderPassDesc.colorAttachments[0].loadAction = MTLLoadActionClear;
+    clearRenderPassDesc.colorAttachments[0].texture = texture;
+
+    id<MTLRenderCommandEncoder> commandEncoder = [commandBuffer renderCommandEncoderWithDescriptor:clearRenderPassDesc];
+    [commandEncoder endEncoding];
 }
 
 -(MTLSize)calculateThreadsPerThreadgroupForPipelineState:(id<MTLComputePipelineState>)pipelineState {

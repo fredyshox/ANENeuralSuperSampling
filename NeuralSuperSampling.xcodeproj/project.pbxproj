@@ -19,7 +19,7 @@
 		E226B89827598F6E00E3900D /* IUnityGraphicsMetal.h in Headers */ = {isa = PBXBuildFile; fileRef = E226B89527598F6E00E3900D /* IUnityGraphicsMetal.h */; };
 		E226B89927598F6E00E3900D /* IUnityInterface.h in Headers */ = {isa = PBXBuildFile; fileRef = E226B89627598F6E00E3900D /* IUnityInterface.h */; };
 		E226B89B2759934000E3900D /* NSSRenderApi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E226B89A2759934000E3900D /* NSSRenderApi.cpp */; };
-		E2309279279CCDD500799670 /* NSSMetalPreprocessorTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E2309278279CCDD500799670 /* NSSMetalPreprocessorTests.m */; };
+		E2309279279CCDD500799670 /* NSSMetalProcessingTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E2309278279CCDD500799670 /* NSSMetalProcessingTests.m */; };
 		E2709A552752B36A00C7DB23 /* Preprocessing.metal in Sources */ = {isa = PBXBuildFile; fileRef = E2709A542752B36A00C7DB23 /* Preprocessing.metal */; };
 		E2709A582752BBF700C7DB23 /* NSSANEReconstructor.h in Headers */ = {isa = PBXBuildFile; fileRef = E2709A562752BBF700C7DB23 /* NSSANEReconstructor.h */; };
 		E2709A592752BBF700C7DB23 /* NSSANEReconstructor.m in Sources */ = {isa = PBXBuildFile; fileRef = E2709A572752BBF700C7DB23 /* NSSANEReconstructor.m */; };
@@ -29,17 +29,29 @@
 		E2709A612753192500C7DB23 /* NSSUpscaler.m in Sources */ = {isa = PBXBuildFile; fileRef = E2709A5F2753192500C7DB23 /* NSSUpscaler.m */; };
 		E2709A632753BA0900C7DB23 /* DecodeBuffer.metal in Sources */ = {isa = PBXBuildFile; fileRef = E2709A622753BA0900C7DB23 /* DecodeBuffer.metal */; };
 		E279FE36274C4EFA00DC29D1 /* NeuralSuperSampling.h in Headers */ = {isa = PBXBuildFile; fileRef = E279FE35274C4EFA00DC29D1 /* NeuralSuperSampling.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		E279FE40274C4F6500DC29D1 /* NSSMetalPreprocessor.h in Headers */ = {isa = PBXBuildFile; fileRef = E279FE3E274C4F6500DC29D1 /* NSSMetalPreprocessor.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		E279FE41274C4F6500DC29D1 /* NSSMetalPreprocessor.m in Sources */ = {isa = PBXBuildFile; fileRef = E279FE3F274C4F6500DC29D1 /* NSSMetalPreprocessor.m */; };
+		E279FE40274C4F6500DC29D1 /* NSSMetalProcessing.h in Headers */ = {isa = PBXBuildFile; fileRef = E279FE3E274C4F6500DC29D1 /* NSSMetalProcessing.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E279FE41274C4F6500DC29D1 /* NSSMetalProcessing.m in Sources */ = {isa = PBXBuildFile; fileRef = E279FE3F274C4F6500DC29D1 /* NSSMetalProcessing.m */; };
 		E279FE44274C5BC900DC29D1 /* NSSBuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = E279FE42274C5BC900DC29D1 /* NSSBuffer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E279FE45274C5BC900DC29D1 /* NSSBuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = E279FE43274C5BC900DC29D1 /* NSSBuffer.m */; };
 		E279FE48274C659800DC29D1 /* NSSPreprocessorDescriptor.h in Headers */ = {isa = PBXBuildFile; fileRef = E279FE46274C659800DC29D1 /* NSSPreprocessorDescriptor.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E279FE49274C659800DC29D1 /* NSSPreprocessorDescriptor.m in Sources */ = {isa = PBXBuildFile; fileRef = E279FE47274C659800DC29D1 /* NSSPreprocessorDescriptor.m */; };
+		E2801AEC27AA0E57006B548B /* NSSPreprocessor.h in Headers */ = {isa = PBXBuildFile; fileRef = E2801AEB27AA0E57006B548B /* NSSPreprocessor.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E2801AEF27AA11F3006B548B /* NSSMultiFrameRGBDMotionPreprocessor.h in Headers */ = {isa = PBXBuildFile; fileRef = E2801AED27AA11F3006B548B /* NSSMultiFrameRGBDMotionPreprocessor.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E2801AF027AA11F3006B548B /* NSSMultiFrameRGBDMotionPreprocessor.m in Sources */ = {isa = PBXBuildFile; fileRef = E2801AEE27AA11F3006B548B /* NSSMultiFrameRGBDMotionPreprocessor.m */; };
+		E2801AF127AA11F3006B548B /* NSSMultiFrameRGBDMotionPreprocessor.m in Sources */ = {isa = PBXBuildFile; fileRef = E2801AEE27AA11F3006B548B /* NSSMultiFrameRGBDMotionPreprocessor.m */; };
+		E2801AF727AC5E0C006B548B /* NSSModel.h in Headers */ = {isa = PBXBuildFile; fileRef = E2801AF527AC5E0C006B548B /* NSSModel.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E2801AF827AC5E0C006B548B /* NSSModel.m in Sources */ = {isa = PBXBuildFile; fileRef = E2801AF627AC5E0C006B548B /* NSSModel.m */; };
+		E2801AF927AC5E0C006B548B /* NSSModel.m in Sources */ = {isa = PBXBuildFile; fileRef = E2801AF627AC5E0C006B548B /* NSSModel.m */; };
+		E2801AFD27AC9A40006B548B /* NSSModel+EmbeddedModels.h in Headers */ = {isa = PBXBuildFile; fileRef = E2801AFB27AC9A40006B548B /* NSSModel+EmbeddedModels.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E2801AFE27AC9A40006B548B /* NSSModel+EmbeddedModels.m in Sources */ = {isa = PBXBuildFile; fileRef = E2801AFC27AC9A40006B548B /* NSSModel+EmbeddedModels.m */; };
+		E2801AFF27AC9A40006B548B /* NSSModel+EmbeddedModels.m in Sources */ = {isa = PBXBuildFile; fileRef = E2801AFC27AC9A40006B548B /* NSSModel+EmbeddedModels.m */; };
+		E2801B0027ACA15E006B548B /* NSSModel+Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = E2801AFA27AC63A6006B548B /* NSSModel+Internal.h */; };
+		E2801B0127ACA17A006B548B /* NSSDecoder.h in Headers */ = {isa = PBXBuildFile; fileRef = E2801AF427AC5A77006B548B /* NSSDecoder.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E282D7BE276CCAFC00E0D9D3 /* NSSRenderApi_ANEMetal.mm in Sources */ = {isa = PBXBuildFile; fileRef = E226B88E27598BC800E3900D /* NSSRenderApi_ANEMetal.mm */; };
 		E282D7BF276CCAFF00E0D9D3 /* NSSRenderApi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E226B89A2759934000E3900D /* NSSRenderApi.cpp */; };
 		E282D7C0276CCB0100E0D9D3 /* RenderingPlugin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E226B89127598C5D00E3900D /* RenderingPlugin.cpp */; };
 		E282D7C1276CCB0C00E0D9D3 /* NSSBuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = E279FE43274C5BC900DC29D1 /* NSSBuffer.m */; };
-		E282D7C2276CCB0E00E0D9D3 /* NSSMetalPreprocessor.m in Sources */ = {isa = PBXBuildFile; fileRef = E279FE3F274C4F6500DC29D1 /* NSSMetalPreprocessor.m */; };
+		E282D7C2276CCB0E00E0D9D3 /* NSSMetalProcessing.m in Sources */ = {isa = PBXBuildFile; fileRef = E279FE3F274C4F6500DC29D1 /* NSSMetalProcessing.m */; };
 		E282D7C3276CCB1000E0D9D3 /* NSSPreprocessorDescriptor.m in Sources */ = {isa = PBXBuildFile; fileRef = E279FE47274C659800DC29D1 /* NSSPreprocessorDescriptor.m */; };
 		E282D7C4276CCB1300E0D9D3 /* NSSANEReconstructor.m in Sources */ = {isa = PBXBuildFile; fileRef = E2709A572752BBF700C7DB23 /* NSSANEReconstructor.m */; };
 		E282D7C5276CCB4600E0D9D3 /* NSSANEDecoder.m in Sources */ = {isa = PBXBuildFile; fileRef = E2709A5B2753190300C7DB23 /* NSSANEDecoder.m */; };
@@ -114,7 +126,7 @@
 		E226B89627598F6E00E3900D /* IUnityInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IUnityInterface.h; sourceTree = "<group>"; };
 		E226B89A2759934000E3900D /* NSSRenderApi.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = NSSRenderApi.cpp; sourceTree = "<group>"; };
 		E226B89C275A65BE00E3900D /* PlatformBase.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PlatformBase.h; sourceTree = "<group>"; };
-		E2309278279CCDD500799670 /* NSSMetalPreprocessorTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSSMetalPreprocessorTests.m; sourceTree = "<group>"; };
+		E2309278279CCDD500799670 /* NSSMetalProcessingTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSSMetalProcessingTests.m; sourceTree = "<group>"; };
 		E24B18B127559F9A003C635A /* Config.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Config.h; sourceTree = "<group>"; };
 		E2709A542752B36A00C7DB23 /* Preprocessing.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Preprocessing.metal; sourceTree = "<group>"; };
 		E2709A562752BBF700C7DB23 /* NSSANEReconstructor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NSSANEReconstructor.h; sourceTree = "<group>"; };
@@ -127,12 +139,21 @@
 		E2709A642753C2CB00C7DB23 /* NSSUtility.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NSSUtility.h; sourceTree = "<group>"; };
 		E279FE32274C4EFA00DC29D1 /* NeuralSuperSampling.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = NeuralSuperSampling.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E279FE35274C4EFA00DC29D1 /* NeuralSuperSampling.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NeuralSuperSampling.h; sourceTree = "<group>"; };
-		E279FE3E274C4F6500DC29D1 /* NSSMetalPreprocessor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NSSMetalPreprocessor.h; sourceTree = "<group>"; };
-		E279FE3F274C4F6500DC29D1 /* NSSMetalPreprocessor.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSSMetalPreprocessor.m; sourceTree = "<group>"; };
+		E279FE3E274C4F6500DC29D1 /* NSSMetalProcessing.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NSSMetalProcessing.h; sourceTree = "<group>"; };
+		E279FE3F274C4F6500DC29D1 /* NSSMetalProcessing.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSSMetalProcessing.m; sourceTree = "<group>"; };
 		E279FE42274C5BC900DC29D1 /* NSSBuffer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NSSBuffer.h; sourceTree = "<group>"; };
 		E279FE43274C5BC900DC29D1 /* NSSBuffer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSSBuffer.m; sourceTree = "<group>"; };
 		E279FE46274C659800DC29D1 /* NSSPreprocessorDescriptor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NSSPreprocessorDescriptor.h; sourceTree = "<group>"; };
 		E279FE47274C659800DC29D1 /* NSSPreprocessorDescriptor.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSSPreprocessorDescriptor.m; sourceTree = "<group>"; };
+		E2801AEB27AA0E57006B548B /* NSSPreprocessor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSSPreprocessor.h; sourceTree = "<group>"; };
+		E2801AED27AA11F3006B548B /* NSSMultiFrameRGBDMotionPreprocessor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NSSMultiFrameRGBDMotionPreprocessor.h; sourceTree = "<group>"; };
+		E2801AEE27AA11F3006B548B /* NSSMultiFrameRGBDMotionPreprocessor.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSSMultiFrameRGBDMotionPreprocessor.m; sourceTree = "<group>"; };
+		E2801AF427AC5A77006B548B /* NSSDecoder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NSSDecoder.h; sourceTree = "<group>"; };
+		E2801AF527AC5E0C006B548B /* NSSModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NSSModel.h; sourceTree = "<group>"; };
+		E2801AF627AC5E0C006B548B /* NSSModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSSModel.m; sourceTree = "<group>"; };
+		E2801AFA27AC63A6006B548B /* NSSModel+Internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSSModel+Internal.h"; sourceTree = "<group>"; };
+		E2801AFB27AC9A40006B548B /* NSSModel+EmbeddedModels.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSSModel+EmbeddedModels.h"; sourceTree = "<group>"; };
+		E2801AFC27AC9A40006B548B /* NSSModel+EmbeddedModels.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSSModel+EmbeddedModels.m"; sourceTree = "<group>"; };
 		E282D7BA276CCAE300E0D9D3 /* NeuralSuperSamplingPlugin.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NeuralSuperSamplingPlugin.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
 		E2A6EE4C279CE53D009AC95C /* NSSANEDecoderTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSSANEDecoderTests.m; sourceTree = "<group>"; };
 		E2B5B689278B281C00AD1DB6 /* NeuralSuperSamplingCLI */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = NeuralSuperSamplingCLI; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -191,7 +212,7 @@
 			isa = PBXGroup;
 			children = (
 				E2220A0C275EB1CA00DCF617 /* NSSUpscalerTests.m */,
-				E2309278279CCDD500799670 /* NSSMetalPreprocessorTests.m */,
+				E2309278279CCDD500799670 /* NSSMetalProcessingTests.m */,
 				E2A6EE4C279CE53D009AC95C /* NSSANEDecoderTests.m */,
 				E20C72F227A0AEDF00181FB8 /* NSSTestUtils.m */,
 				E20C72F427A0AFEC00181FB8 /* NSSTestUtils.h */,
@@ -254,8 +275,8 @@
 				E279FE35274C4EFA00DC29D1 /* NeuralSuperSampling.h */,
 				E279FE42274C5BC900DC29D1 /* NSSBuffer.h */,
 				E279FE43274C5BC900DC29D1 /* NSSBuffer.m */,
-				E279FE3E274C4F6500DC29D1 /* NSSMetalPreprocessor.h */,
-				E279FE3F274C4F6500DC29D1 /* NSSMetalPreprocessor.m */,
+				E279FE3E274C4F6500DC29D1 /* NSSMetalProcessing.h */,
+				E279FE3F274C4F6500DC29D1 /* NSSMetalProcessing.m */,
 				E279FE46274C659800DC29D1 /* NSSPreprocessorDescriptor.h */,
 				E279FE47274C659800DC29D1 /* NSSPreprocessorDescriptor.m */,
 				E2709A562752BBF700C7DB23 /* NSSANEReconstructor.h */,
@@ -264,8 +285,17 @@
 				E2709A5B2753190300C7DB23 /* NSSANEDecoder.m */,
 				E2709A5E2753192500C7DB23 /* NSSUpscaler.h */,
 				E2709A5F2753192500C7DB23 /* NSSUpscaler.m */,
+				E2801AEB27AA0E57006B548B /* NSSPreprocessor.h */,
+				E2801AF427AC5A77006B548B /* NSSDecoder.h */,
 				E2709A642753C2CB00C7DB23 /* NSSUtility.h */,
 				E20C72F527A0BBDF00181FB8 /* NSSUtility.m */,
+				E2801AED27AA11F3006B548B /* NSSMultiFrameRGBDMotionPreprocessor.h */,
+				E2801AEE27AA11F3006B548B /* NSSMultiFrameRGBDMotionPreprocessor.m */,
+				E2801AF527AC5E0C006B548B /* NSSModel.h */,
+				E2801AF627AC5E0C006B548B /* NSSModel.m */,
+				E2801AFA27AC63A6006B548B /* NSSModel+Internal.h */,
+				E2801AFB27AC9A40006B548B /* NSSModel+EmbeddedModels.h */,
+				E2801AFC27AC9A40006B548B /* NSSModel+EmbeddedModels.m */,
 				E24B18B127559F9A003C635A /* Config.h */,
 			);
 			path = NeuralSuperSampling;
@@ -310,16 +340,22 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E2801AF727AC5E0C006B548B /* NSSModel.h in Headers */,
 				E226B89927598F6E00E3900D /* IUnityInterface.h in Headers */,
 				E2709A602753192500C7DB23 /* NSSUpscaler.h in Headers */,
 				E279FE44274C5BC900DC29D1 /* NSSBuffer.h in Headers */,
 				E226B89727598F6E00E3900D /* IUnityGraphics.h in Headers */,
-				E279FE40274C4F6500DC29D1 /* NSSMetalPreprocessor.h in Headers */,
+				E279FE40274C4F6500DC29D1 /* NSSMetalProcessing.h in Headers */,
 				E2709A582752BBF700C7DB23 /* NSSANEReconstructor.h in Headers */,
 				E279FE36274C4EFA00DC29D1 /* NeuralSuperSampling.h in Headers */,
+				E2801B0027ACA15E006B548B /* NSSModel+Internal.h in Headers */,
+				E2801AFD27AC9A40006B548B /* NSSModel+EmbeddedModels.h in Headers */,
+				E2801B0127ACA17A006B548B /* NSSDecoder.h in Headers */,
 				E279FE48274C659800DC29D1 /* NSSPreprocessorDescriptor.h in Headers */,
 				E2709A5C2753190300C7DB23 /* NSSANEDecoder.h in Headers */,
+				E2801AEF27AA11F3006B548B /* NSSMultiFrameRGBDMotionPreprocessor.h in Headers */,
 				E226B89827598F6E00E3900D /* IUnityGraphicsMetal.h in Headers */,
+				E2801AEC27AA0E57006B548B /* NSSPreprocessor.h in Headers */,
 				E2220A15275EB30C00DCF617 /* NSSUtility.h in Headers */,
 				E2220A16275EB31000DCF617 /* Config.h in Headers */,
 			);
@@ -485,7 +521,7 @@
 				E20C72F327A0AEDF00181FB8 /* NSSTestUtils.m in Sources */,
 				E2220A0D275EB1CA00DCF617 /* NSSUpscalerTests.m in Sources */,
 				E2A6EE4D279CE53D009AC95C /* NSSANEDecoderTests.m in Sources */,
-				E2309279279CCDD500799670 /* NSSMetalPreprocessorTests.m in Sources */,
+				E2309279279CCDD500799670 /* NSSMetalProcessingTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -495,14 +531,17 @@
 			files = (
 				E2709A552752B36A00C7DB23 /* Preprocessing.metal in Sources */,
 				E226B89227598C5D00E3900D /* RenderingPlugin.cpp in Sources */,
+				E2801AFE27AC9A40006B548B /* NSSModel+EmbeddedModels.m in Sources */,
+				E2801AF827AC5E0C006B548B /* NSSModel.m in Sources */,
 				E2709A632753BA0900C7DB23 /* DecodeBuffer.metal in Sources */,
+				E2801AF027AA11F3006B548B /* NSSMultiFrameRGBDMotionPreprocessor.m in Sources */,
 				E279FE45274C5BC900DC29D1 /* NSSBuffer.m in Sources */,
 				E2709A5D2753190300C7DB23 /* NSSANEDecoder.m in Sources */,
 				E2709A592752BBF700C7DB23 /* NSSANEReconstructor.m in Sources */,
 				E226B88F27598BC800E3900D /* NSSRenderApi_ANEMetal.mm in Sources */,
 				E20C72F627A0BBDF00181FB8 /* NSSUtility.m in Sources */,
 				E2709A612753192500C7DB23 /* NSSUpscaler.m in Sources */,
-				E279FE41274C4F6500DC29D1 /* NSSMetalPreprocessor.m in Sources */,
+				E279FE41274C4F6500DC29D1 /* NSSMetalProcessing.m in Sources */,
 				E226B89B2759934000E3900D /* NSSRenderApi.cpp in Sources */,
 				E279FE49274C659800DC29D1 /* NSSPreprocessorDescriptor.m in Sources */,
 			);
@@ -516,13 +555,16 @@
 				E282D7C1276CCB0C00E0D9D3 /* NSSBuffer.m in Sources */,
 				E282D7C8276CCB5100E0D9D3 /* DecodeBuffer.metal in Sources */,
 				E282D7BE276CCAFC00E0D9D3 /* NSSRenderApi_ANEMetal.mm in Sources */,
+				E2801AF927AC5E0C006B548B /* NSSModel.m in Sources */,
 				E282D7C3276CCB1000E0D9D3 /* NSSPreprocessorDescriptor.m in Sources */,
 				E282D7C7276CCB4E00E0D9D3 /* Preprocessing.metal in Sources */,
+				E2801AFF27AC9A40006B548B /* NSSModel+EmbeddedModels.m in Sources */,
 				E282D7C6276CCB4800E0D9D3 /* NSSUpscaler.m in Sources */,
 				E282D7C0276CCB0100E0D9D3 /* RenderingPlugin.cpp in Sources */,
 				E282D7BF276CCAFF00E0D9D3 /* NSSRenderApi.cpp in Sources */,
 				E282D7C4276CCB1300E0D9D3 /* NSSANEReconstructor.m in Sources */,
-				E282D7C2276CCB0E00E0D9D3 /* NSSMetalPreprocessor.m in Sources */,
+				E2801AF127AA11F3006B548B /* NSSMultiFrameRGBDMotionPreprocessor.m in Sources */,
+				E282D7C2276CCB0E00E0D9D3 /* NSSMetalProcessing.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

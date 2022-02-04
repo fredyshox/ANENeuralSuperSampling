@@ -19,9 +19,11 @@ FOUNDATION_EXPORT const unsigned char NeuralSuperSamplingVersionString[];
 // In this header, you should import all the public headers of your framework using statements like #import <NeuralSuperSampling/PublicHeader.h>
 
 #import <NeuralSuperSampling/NSSUpscaler.h>
-#import <NeuralSuperSampling/NSSMetalPreprocessor.h>
+#import <NeuralSuperSampling/NSSMetalProcessing.h>
 #import <NeuralSuperSampling/NSSPreprocessorDescriptor.h>
+#import <NeuralSuperSampling/NSSMultiFrameRGBDMotionPreprocessor.h>
 #import <NeuralSuperSampling/NSSANEDecoder.h>
 #import <NeuralSuperSampling/NSSBuffer.h>
+#import <NeuralSuperSampling/NSSModel.h>
 
 #endif /* NSS_h */

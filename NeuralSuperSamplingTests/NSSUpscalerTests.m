@@ -23,7 +23,11 @@
 - (void)setUp {
     device = MTLCreateSystemDefaultDevice();
     queue = [device newCommandQueue];
-    upscaler = [[NSSUpscaler alloc] initWithDevice:device];
+    
+    NSSModel* model = [NSSModel priamp_multiFrame3fps720p];
+    NSSMultiFrameRGBDMotionPreprocessor* preprocessor = [[NSSMultiFrameRGBDMotionPreprocessor alloc] initWithDevice:device model:model];
+    NSSANEDecoder* decoder = [[NSSANEDecoder alloc] initWithDevice:device yuvToRgbConversion:NO];
+    upscaler = [[NSSUpscaler alloc] initWithDevice:device preprocessor:preprocessor decoder:decoder model:model];
     
     int zeroBufLen = sizeof(__fp16)*640*360*4;
     zeroBuf = malloc(zeroBufLen);
@@ -66,6 +70,7 @@
         [upscaler processInput:input outputTexture:outputTexture usingCommandBuffer:buffer];
         [buffer commit];
         [buffer waitUntilCompleted];
+        XCTAssertNil(buffer.error);
     }];
 }
 

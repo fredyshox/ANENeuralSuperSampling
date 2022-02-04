@@ -1,5 +1,5 @@
 //
-//  NSSMetalPreprocessorTests.m
+//  NSSMetalProcessingTests.m
 //  NeuralSuperSamplingTests
 //
 //  Created by Kacper Rączy on 23/01/2022.
@@ -13,27 +13,23 @@
 
 #define NSS_TEST_IWIDTH  10
 #define NSS_TEST_IHEIGHT 10
+#define NSS_TEST_OWIDTH  20
+#define NSS_TEST_OHEIGHT 20
 #define NSS_TEST_SCALE   2
 #define NSS_TEST_STRIDE  16
 
-@interface NSSMetalPreprocessorTests : XCTestCase
+@interface NSSMetalProcessingTests : XCTestCase
 
 @end
 
-@implementation NSSMetalPreprocessorTests {
+@implementation NSSMetalProcessingTests {
     id<MTLDevice> device;
     id<MTLCommandQueue> queue;
-    NSSPreprocessorDescriptor* descriptor;
 }
 
 - (void)setUp {
     device = MTLCreateSystemDefaultDevice();
     queue = [device newCommandQueue];
-    descriptor =
-        [[NSSPreprocessorDescriptor alloc] initWithWidth:NSS_TEST_IWIDTH
-                                                  height:NSS_TEST_IHEIGHT
-                                             scaleFactor:NSS_TEST_SCALE
-                                      outputBufferStride:NSS_TEST_STRIDE];
 }
 
 - (void)tearDown {
@@ -44,7 +40,7 @@
 
 - (void)testWarpTextureWithZeroMotion {
     BOOL failOnce = true;
-    NSSMetalPreprocessor* preprocessor = [[NSSMetalPreprocessor alloc] initWithDevice:device descriptor:descriptor];
+    NSSMetalProcessing* preprocessor = [[NSSMetalProcessing alloc] initWithDevice:device scaleFactor:NSS_TEST_SCALE outputBufferStride:NSS_TEST_STRIDE];
     
     id<MTLTexture> inputTexture = [self newColorOutputTexture]; // input has same size as output
     id<MTLTexture> outputTexture = [self newColorOutputTexture];
@@ -88,12 +84,12 @@
 // MARK: Copy texture tests
 
 - (void)testCopyTextureToBuffer {
-    id<MTLBuffer> buffer = newBuffer(device, descriptor.outputWidth, descriptor.outputHeight, NSS_TEST_STRIDE);
+    id<MTLBuffer> buffer = newBuffer(device, NSS_TEST_OWIDTH, NSS_TEST_OHEIGHT, NSS_TEST_STRIDE);
     [self _testCopyTextureToBufferUsingOutputBuffer:buffer];
 }
 
 - (void)testCopyTextureToBufferWithIOSurface {
-    IOSurfaceRef surface = newIOSurfaceBufferBacking(descriptor.outputWidth, descriptor.outputHeight, NSS_TEST_STRIDE);
+    IOSurfaceRef surface = newIOSurfaceBufferBacking(NSS_TEST_OWIDTH, NSS_TEST_OHEIGHT, NSS_TEST_STRIDE);
     id<MTLBuffer> buffer = [device newBufferWithBytesNoCopy:IOSurfaceGetBaseAddress(surface)
                                                      length:IOSurfaceGetAllocSize(surface)
                                                     options:MTLResourceStorageModeShared
@@ -104,7 +100,7 @@
 - (void)_testCopyTextureToBufferUsingOutputBuffer:(id<MTLBuffer>)buffer {
     BOOL once = true;
     
-    NSSMetalPreprocessor* preprocessor = [[NSSMetalPreprocessor alloc] initWithDevice:device descriptor:descriptor];
+    NSSMetalProcessing* preprocessor = [[NSSMetalProcessing alloc] initWithDevice:device scaleFactor:NSS_TEST_SCALE outputBufferStride:NSS_TEST_STRIDE];
     
     id<MTLTexture> colorTexture = [self newColorOutputTexture];
     id<MTLTexture> depthTexture = [self newDepthOutputTexture];
@@ -142,27 +138,27 @@
 
 - (id<MTLTexture>)newMotionInputTexture {
     return [self newTextureWithPixelFormat:MTLPixelFormatRG16Float
-                                   andSize:MTLSizeMake(descriptor.inputWidth, descriptor.inputHeight, 1)];
+                                   andSize:MTLSizeMake(NSS_TEST_IWIDTH, NSS_TEST_IHEIGHT, 1)];
 }
 
 - (id<MTLTexture>)newColorInputTexture {
     return [self newTextureWithPixelFormat:MTLPixelFormatRGBA16Float
-                                   andSize:MTLSizeMake(descriptor.inputWidth, descriptor.inputHeight, 1)];
+                                   andSize:MTLSizeMake(NSS_TEST_IWIDTH, NSS_TEST_IHEIGHT, 1)];
 }
 
 - (id<MTLTexture>)newColorOutputTexture {
     return [self newTextureWithPixelFormat:MTLPixelFormatRGBA16Float
-                                   andSize:MTLSizeMake(descriptor.outputWidth, descriptor.outputHeight, 1)];
+                                   andSize:MTLSizeMake(NSS_TEST_IWIDTH, NSS_TEST_IHEIGHT, 1)];
 }
 
 - (id<MTLTexture>)newDepthInputTexture {
     return [self newTextureWithPixelFormat:MTLPixelFormatR16Float
-                                   andSize:MTLSizeMake(descriptor.inputWidth, descriptor.inputHeight, 1)];
+                                   andSize:MTLSizeMake(NSS_TEST_IWIDTH, NSS_TEST_IHEIGHT, 1)];
 }
 
 - (id<MTLTexture>)newDepthOutputTexture {
     return [self newTextureWithPixelFormat:MTLPixelFormatR16Float
-                                   andSize:MTLSizeMake(descriptor.outputWidth, descriptor.outputHeight, 1)];
+                                   andSize:MTLSizeMake(NSS_TEST_IWIDTH, NSS_TEST_IHEIGHT, 1)];
 }
 
 - (id<MTLTexture>)newTextureWithPixelFormat:(MTLPixelFormat)pixelFormat andSize:(MTLSize)size {

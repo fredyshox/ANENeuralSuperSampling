@@ -13,8 +13,11 @@
 #include "Unity/IUnityGraphicsMetal.h"
 #include <assert.h>
 
-#import "NSSUpscaler.h"
 #import <Metal/Metal.h>
+#import "NSSUpscaler.h"
+#import "NSSModel.h"
+#import "NSSMultiFrameRGBDMotionPreprocessor.h"
+#import "NSSANEDecoder.h"
 
 class NSSRenderApi_ANEMetal: public NSSRenderApi {
 public:
@@ -26,6 +29,7 @@ public:
 private:
     IUnityGraphicsMetal* _metalGraphics;
     NSSUpscaler*         _upscaler;
+    NSSModel*            _model;
     
     void CreateResources();
     void PurgeResources();
@@ -38,7 +42,15 @@ NSSRenderApi* CreateRenderApi_Metal() {
 void NSSRenderApi_ANEMetal::CreateResources() {
     id<MTLDevice> device = _metalGraphics->MetalDevice();
     
-    _upscaler = [[NSSUpscaler alloc] initWithDevice: device];
+    NSSModel* model = [NSSModel priamp_multiFrame3fps720p];
+    NSSMultiFrameRGBDMotionPreprocessor* preprocessor =
+        [[NSSMultiFrameRGBDMotionPreprocessor alloc] initWithDevice:device
+                                                              model:model];
+    NSSANEDecoder* decoder =
+        [[NSSANEDecoder alloc] initWithDevice:device
+                           yuvToRgbConversion:NO];
+    _upscaler = [[NSSUpscaler alloc] initWithDevice:device preprocessor:preprocessor decoder:decoder model:model];
+    _model = model;
 }
 
 void NSSRenderApi_ANEMetal::PurgeResources() {

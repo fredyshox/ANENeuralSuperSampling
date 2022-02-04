@@ -9,23 +9,28 @@
 
 @implementation NSSPreprocessorDescriptor
 
--(id)initWithWidth:(unsigned int)width height:(unsigned int)height scaleFactor:(unsigned int)scaleFactor outputBufferStride:(unsigned int)outputStride {
+- (id)initWithWidth:(NSUInteger)width height:(NSUInteger)height
+        scaleFactor:(NSUInteger)scaleFactor channelCount:(NSUInteger)channelCount
+         frameCount:(NSUInteger)frameCount outputBufferStride:(NSUInteger)outputStride
+{
     self = [super init];
     if (self) {
         _inputWidth = width;
         _inputHeight = height;
         _scaleFactor = scaleFactor;
+        _channelCount = channelCount;
+        _frameCount = frameCount;
         _outputBufferStride = outputStride;
     }
     
     return self;
 }
 
-- (unsigned int)outputWidth {
+- (NSUInteger)outputWidth {
     return _inputWidth * _scaleFactor;
 }
 
-- (unsigned int)outputHeight {
+- (NSUInteger)outputHeight {
     return _inputHeight * _scaleFactor;
 }
 

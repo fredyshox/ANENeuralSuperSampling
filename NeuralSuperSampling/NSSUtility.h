@@ -18,6 +18,12 @@
 
 #define RAISE_EXCEPTION(name) RAISE_EXCEPTION_ON_ERROR([NSError new], name)
 
+#ifdef DEBUG
+#define NSDebugLog(...) NSLog(__VA_ARGS__)
+#else
+#define NSDebugLog(...) (void)0;
+#endif
+
 void debug_dumpIOSurfaceToFile(NSString* path, IOSurfaceRef surface);
 
 #endif /* NSSUtility_h */

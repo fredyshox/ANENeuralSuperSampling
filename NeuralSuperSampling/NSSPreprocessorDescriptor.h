@@ -11,14 +11,18 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface NSSPreprocessorDescriptor : NSObject
 
-@property (nonatomic, readwrite) unsigned int inputWidth;
-@property (nonatomic, readwrite) unsigned int inputHeight;
-@property (nonatomic, readwrite) unsigned int scaleFactor;
-@property (nonatomic, readwrite) unsigned int outputBufferStride;
+@property (nonatomic, readwrite) NSUInteger inputWidth;
+@property (nonatomic, readwrite) NSUInteger inputHeight;
+@property (nonatomic, readwrite) NSUInteger scaleFactor;
+@property (nonatomic, readwrite) NSUInteger channelCount;
+@property (nonatomic, readwrite) NSUInteger frameCount;
+@property (nonatomic, readwrite) NSUInteger outputBufferStride;
 
-- (id)initWithWidth:(unsigned int)width height:(unsigned int)height scaleFactor:(unsigned int)scaleFactor outputBufferStride:(unsigned int)outputStride;
-- (unsigned int)outputWidth;
-- (unsigned int)outputHeight;
+- (id)initWithWidth:(NSUInteger)width height:(NSUInteger)height
+        scaleFactor:(NSUInteger)scaleFactor channelCount:(NSUInteger)channelCount
+         frameCount:(NSUInteger)frameCount outputBufferStride:(NSUInteger)outputStride;
+- (NSUInteger)outputWidth;
+- (NSUInteger)outputHeight;
 
 @end
 
