@@ -5,11 +5,10 @@
 //  Created by Kacper Rączy on 03/02/2022.
 //
 
-#ifndef NSSDecoder_h
-#define NSSDecoder_h
-
 #import <Metal/Metal.h>
-#import "NSSBuffer.h"
+#import <NeuralSuperSampling/NSSBuffer.h>
+
+NS_ASSUME_NONNULL_BEGIN
 
 @protocol NSSDecoder <NSObject>
 
@@ -18,5 +17,4 @@
 
 @end
 
-
-#endif /* NSSDecoder_h */
+NS_ASSUME_NONNULL_END

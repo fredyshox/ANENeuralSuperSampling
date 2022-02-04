@@ -7,9 +7,9 @@
 
 #import <Foundation/Foundation.h>
 #import <Metal/Metal.h>
-#import "NSSPreprocessor.h"
-#import "NSSDecoder.h"
-#import "NSSModel.h"
+#import <NeuralSuperSampling/NSSPreprocessor.h>
+#import <NeuralSuperSampling/NSSDecoder.h>
+#import <NeuralSuperSampling/NSSModel.h>
 
 struct NSSInput {
     NSObject<MTLTexture>* _Nonnull colorTexture;

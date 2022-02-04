@@ -7,9 +7,9 @@
 
 #import <Foundation/Foundation.h>
 #import <Metal/Metal.h>
-#import "NSSPreprocessor.h"
-#import "NSSPreprocessorDescriptor.h"
-#import "NSSModel.h"
+#import <NeuralSuperSampling/NSSPreprocessor.h>
+#import <NeuralSuperSampling/NSSPreprocessorDescriptor.h>
+#import <NeuralSuperSampling/NSSModel.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

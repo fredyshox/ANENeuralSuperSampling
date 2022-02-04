@@ -7,7 +7,7 @@
 
 #import <Foundation/Foundation.h>
 #import <Metal/Metal.h>
-#import "NSSDecoder.h"
+#import <NeuralSuperSampling/NSSDecoder.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

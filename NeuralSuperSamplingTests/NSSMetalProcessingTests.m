@@ -40,7 +40,7 @@
 
 - (void)testWarpTextureWithZeroMotion {
     BOOL failOnce = true;
-    NSSMetalProcessing* preprocessor = [[NSSMetalProcessing alloc] initWithDevice:device scaleFactor:NSS_TEST_SCALE outputBufferStride:NSS_TEST_STRIDE];
+    NSSMetalProcessing* processor = [[NSSMetalProcessing alloc] initWithDevice:device scaleFactor:NSS_TEST_SCALE outputBufferStride:NSS_TEST_STRIDE];
     
     id<MTLTexture> inputTexture = [self newColorOutputTexture]; // input has same size as output
     id<MTLTexture> outputTexture = [self newColorOutputTexture];
@@ -50,7 +50,7 @@
     fillTextureGridX(inputTexture, CHANNEL_COUNT_COLOR);
     
     id<MTLCommandBuffer> commandBuffer = [queue commandBuffer];
-    [preprocessor warpInputTexture:inputTexture
+    [processor warpInputTexture:inputTexture
                      motionTexture:motionTexture
                      outputTexture:outputTexture
                  withCommandBuffer:commandBuffer];
@@ -100,7 +100,7 @@
 - (void)_testCopyTextureToBufferUsingOutputBuffer:(id<MTLBuffer>)buffer {
     BOOL once = true;
     
-    NSSMetalProcessing* preprocessor = [[NSSMetalProcessing alloc] initWithDevice:device scaleFactor:NSS_TEST_SCALE outputBufferStride:NSS_TEST_STRIDE];
+    NSSMetalProcessing* processor = [[NSSMetalProcessing alloc] initWithDevice:device scaleFactor:NSS_TEST_SCALE outputBufferStride:NSS_TEST_STRIDE];
     
     id<MTLTexture> colorTexture = [self newColorOutputTexture];
     id<MTLTexture> depthTexture = [self newDepthOutputTexture];
@@ -109,7 +109,7 @@
     fillTexture(depthTexture, 0x01, CHANNEL_COUNT_DEPTH);
     
     id<MTLCommandBuffer> commandBuffer = [queue commandBuffer];
-    [preprocessor copyColorTexture:colorTexture
+    [processor copyColorTexture:colorTexture
                       depthTexture:depthTexture
                       outputBuffer:buffer
                 outputBufferOffset:0
@@ -129,6 +129,34 @@
             [self setContinueAfterFailure:NO];
             once = !once;
         }
+    }
+    
+    [self setContinueAfterFailure:YES];
+}
+
+// MARK: Clear texture tests
+
+- (void)testClearTexture {
+    [self setContinueAfterFailure:NO];
+    NSSMetalProcessing* processor = [[NSSMetalProcessing alloc] initWithDevice:device scaleFactor:NSS_TEST_SCALE outputBufferStride:NSS_TEST_STRIDE];
+    
+    id<MTLTexture> texture = [self newColorInputTexture];
+    
+    fillTexture(texture, 0x10, CHANNEL_COUNT_COLOR);
+    
+    id<MTLCommandBuffer> commandBuffer = [queue commandBuffer];
+    [processor clearTexture:texture withCommandBuffer:commandBuffer];
+    [commandBuffer commit];
+    [commandBuffer waitUntilCompleted];
+    
+    id<MTLCommandBuffer> outputReadBuffer = [queue commandBuffer];
+    id<MTLBuffer> textureBuffer = texturePixelDataToBuffer(outputReadBuffer, texture, CHANNEL_COUNT_COLOR);
+    [outputReadBuffer commit];
+    [outputReadBuffer waitUntilCompleted];
+    
+    __fp16* rawTextureBuffer = (__fp16*) textureBuffer.contents;
+    for (size_t i = 0; i < texture.width * texture.height * CHANNEL_COUNT_COLOR; i++) {
+        XCTAssertEqual(*(rawTextureBuffer + i), (__fp16) 0.0, @"Failure at %lu", i);
     }
     
     [self setContinueAfterFailure:YES];

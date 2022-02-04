@@ -5,11 +5,10 @@
 //  Created by Kacper Rączy on 22/11/2021.
 //
 
-#ifndef NSSPreprocessor_h
-#define NSSPreprocessor_h
-
 #import <Metal/Metal.h>
-#import "NSSPreprocessorDescriptor.h"
+#import <NeuralSuperSampling/NSSPreprocessorDescriptor.h>
+
+NS_ASSUME_NONNULL_BEGIN
 
 @protocol NSSPreprocessor <NSObject>
 
@@ -23,4 +22,4 @@
 
 @end
 
-#endif /* NSSPreprocessor_h */
+NS_ASSUME_NONNULL_END

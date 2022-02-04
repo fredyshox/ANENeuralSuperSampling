@@ -5,7 +5,7 @@
 //  Created by Kacper Rączy on 04/02/2022.
 //
 
-#import "NSSModel.h"
+#import <NeuralSuperSampling/NSSModel.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

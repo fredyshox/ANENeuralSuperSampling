@@ -113,14 +113,20 @@ IOSurfaceRef outputSurface(NSUInteger width, NSUInteger height, NSUInteger strid
     if (self) {
         NSError* error;
         
-        self->_device = device;
-        self->_decoder = decoder;
-        self->_preprocessor = preprocessor;
-        self->_model = model;
-        self->_aneInputBuffer =
+        _device = device;
+        _decoder = decoder;
+        _preprocessor = preprocessor;
+        _model = model;
+        _reconstructor = [[NSSANEReconstructor alloc] initWithMilUrl: model.modelMilURL modelKey:model.modelKey];
+        _aneInputBuffer =
             [[NSSBuffer alloc] initWithIOSurface:inputSurface(model.outputWidth, model.outputHeight, model.inputFrameCount, model.inputChannelCount, model.preprocessingBufferStride)];
-        self->_aneOutputBuffer = [[NSSBuffer alloc] initWithIOSurface:outputSurface(model.outputWidth, model.outputHeight, model.decodingBufferStride)];
-        self->_reconstructor = [[NSSANEReconstructor alloc] initWithMilUrl: model.modelMilURL modelKey:model.modelKey];
+        _aneOutputBuffer = [[NSSBuffer alloc] initWithIOSurface:outputSurface(model.outputWidth, model.outputHeight, model.decodingBufferStride)];
+        // NOTE this MTLBuffer allocation must preceed `attachInputBuffer` of reconstructor and decoder 
+        _immediateBuffer =
+            [device newBufferWithBytesNoCopy:(__fp16*)_aneInputBuffer.dataPointer
+                                      length:_aneInputBuffer.length
+                                     options:MTLResourceStorageModeShared
+                                 deallocator:nil];
         
         // reconstructor setup
         [_reconstructor loadModelWithError:&error];
@@ -129,12 +135,6 @@ IOSurfaceRef outputSurface(NSUInteger width, NSUInteger height, NSUInteger strid
         
         // decoder setup
         [_decoder attachInputBuffer:_aneOutputBuffer];
-        
-        _immediateBuffer =
-            [device newBufferWithBytesNoCopy:(__fp16*)_aneInputBuffer.dataPointer
-                                      length:_aneInputBuffer.length
-                                     options:MTLResourceStorageModeShared
-                                 deallocator:nil];
         
         // mtl event setup
         _preprocessingEvent = [device newSharedEvent];

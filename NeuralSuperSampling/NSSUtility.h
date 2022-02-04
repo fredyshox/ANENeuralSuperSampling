@@ -5,9 +5,6 @@
 //  Created by Kacper Rączy on 28/11/2021.
 //
 
-#ifndef NSSUtility_h
-#define NSSUtility_h
-
 #import <Foundation/Foundation.h>
 #import <IOSurface/IOSurface.h>
 
@@ -24,6 +21,8 @@
 #define NSDebugLog(...) (void)0;
 #endif
 
+NS_ASSUME_NONNULL_BEGIN
+
 void debug_dumpIOSurfaceToFile(NSString* path, IOSurfaceRef surface);
 
-#endif /* NSSUtility_h */
+NS_ASSUME_NONNULL_END
