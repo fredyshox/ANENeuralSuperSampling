@@ -27,10 +27,10 @@
 
 #define CYCLIC_MODULO(a, m) ((a < 0) ? (m + (a % m)) % m : a % m)
 
-IOSurfaceRef inputSurface(NSUInteger width, NSUInteger height, NSUInteger frames, NSUInteger chPerFrame, NSUInteger stride) {
+IOSurfaceRef inputSurface(NSUInteger width, NSUInteger height, NSUInteger frames, NSUInteger chPerFrame, NSUInteger bytesPerStride) {
     IOSurfaceRef ref = IOSurfaceCreate((CFDictionaryRef) @{
         (NSString *) kIOSurfaceBytesPerElement: @2, // sizeof(__half)
-        (NSString *) kIOSurfaceBytesPerRow: @(stride), // 64?
+        (NSString *) kIOSurfaceBytesPerRow: @(bytesPerStride), // 64?
         (NSString *) kIOSurfaceHeight: @(width*height),
         (NSString *) kIOSurfacePixelFormat: @1278226536, // kCVPixelFormatType_OneComponent16Half
         (NSString *) kIOSurfaceWidth: @(chPerFrame*frames)
@@ -44,10 +44,10 @@ IOSurfaceRef inputSurface(NSUInteger width, NSUInteger height, NSUInteger frames
     return ref;
 }
 
-IOSurfaceRef outputSurface(NSUInteger width, NSUInteger height, NSUInteger stride) {
+IOSurfaceRef outputSurface(NSUInteger width, NSUInteger height, NSUInteger bytesPerStride) {
     IOSurfaceRef ref = IOSurfaceCreate((CFDictionaryRef) @{
         (NSString *) kIOSurfaceBytesPerElement: @2, // sizeof(__half)
-        (NSString *) kIOSurfaceBytesPerRow: @(stride), // 64?
+        (NSString *) kIOSurfaceBytesPerRow: @(bytesPerStride), // 64?
         (NSString *) kIOSurfaceHeight: @(width*height),
         (NSString *) kIOSurfacePixelFormat: @1278226536, // kCVPixelFormatType_OneComponent16Half
         (NSString *) kIOSurfaceWidth: @3
@@ -119,8 +119,8 @@ IOSurfaceRef outputSurface(NSUInteger width, NSUInteger height, NSUInteger strid
         _model = model;
         _reconstructor = [[NSSANEReconstructor alloc] initWithMilUrl: model.modelMilURL modelKey:model.modelKey];
         _aneInputBuffer =
-            [[NSSBuffer alloc] initWithIOSurface:inputSurface(model.outputWidth, model.outputHeight, model.inputFrameCount, model.inputChannelCount, model.preprocessingBufferStride)];
-        _aneOutputBuffer = [[NSSBuffer alloc] initWithIOSurface:outputSurface(model.outputWidth, model.outputHeight, model.decodingBufferStride)];
+            [[NSSBuffer alloc] initWithIOSurface:inputSurface(model.outputWidth, model.outputHeight, model.inputFrameCount, model.inputChannelCount, model.preprocessingBufferBytesPerStride)];
+        _aneOutputBuffer = [[NSSBuffer alloc] initWithIOSurface:outputSurface(model.outputWidth, model.outputHeight, model.decodingBufferBytesPerStride)];
         // NOTE this MTLBuffer allocation must preceed `attachInputBuffer` of reconstructor and decoder 
         _immediateBuffer =
             [device newBufferWithBytesNoCopy:(__fp16*)_aneInputBuffer.dataPointer

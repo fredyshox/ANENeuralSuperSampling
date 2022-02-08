@@ -10,7 +10,7 @@
 IOSurfaceRef newIOSurfaceBufferBacking(NSUInteger width, NSUInteger height, NSUInteger stride) {
     IOSurfaceRef ref = IOSurfaceCreate((CFDictionaryRef) @{
         (NSString *) kIOSurfaceBytesPerElement: @2, // sizeof(__half)
-        (NSString *) kIOSurfaceBytesPerRow: @(stride * sizeof(__fp16)), // ?
+        (NSString *) kIOSurfaceBytesPerRow: @(stride), // ?
         (NSString *) kIOSurfaceHeight: @(width*height),
         (NSString *) kIOSurfacePixelFormat: @1278226536, // kCVPixelFormatType_OneComponent16Half
         (NSString *) kIOSurfaceWidth: @(4)
@@ -20,7 +20,7 @@ IOSurfaceRef newIOSurfaceBufferBacking(NSUInteger width, NSUInteger height, NSUI
 }
 
 id<MTLBuffer> newBuffer(id<MTLDevice> device, NSUInteger width, NSUInteger height, NSUInteger stride) {
-    size_t size = width * height * stride * sizeof(__fp16);
+    size_t size = width * height * stride;
     id<MTLBuffer> buffer = [device newBufferWithLength:size options:MTLResourceStorageModeShared];
     
     return buffer;
@@ -81,5 +81,3 @@ void fillTexture(id<MTLTexture> texture, uint8_t value, size_t channelCount) {
                bytesPerRow:bytesPerRow];
     free(buffer);
 }
-
-

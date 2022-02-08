@@ -16,8 +16,9 @@
 #define NSS_TEST_OWIDTH  20
 #define NSS_TEST_OHEIGHT 20
 #define NSS_TEST_SCALE   2
-#define NSS_TEST_STRIDE  16
-
+#define NSS_TEST_BYTES_STRIDE  16
+#define NSS_TEST_STRIDE(type) (NSS_TEST_BYTES_STRIDE / sizeof(type))
+ 
 @interface NSSMetalProcessingTests : XCTestCase
 
 @end
@@ -40,7 +41,7 @@
 
 - (void)testWarpTextureWithZeroMotion {
     BOOL failOnce = true;
-    NSSMetalProcessing* processor = [[NSSMetalProcessing alloc] initWithDevice:device scaleFactor:NSS_TEST_SCALE outputBufferStride:NSS_TEST_STRIDE];
+    NSSMetalProcessing* processor = [[NSSMetalProcessing alloc] initWithDevice:device scaleFactor:NSS_TEST_SCALE outputBufferStride:NSS_TEST_STRIDE(__fp16)];
     
     id<MTLTexture> inputTexture = [self newColorOutputTexture]; // input has same size as output
     id<MTLTexture> outputTexture = [self newColorOutputTexture];
@@ -84,12 +85,12 @@
 // MARK: Copy texture tests
 
 - (void)testCopyTextureToBuffer {
-    id<MTLBuffer> buffer = newBuffer(device, NSS_TEST_OWIDTH, NSS_TEST_OHEIGHT, NSS_TEST_STRIDE);
+    id<MTLBuffer> buffer = newBuffer(device, NSS_TEST_OWIDTH, NSS_TEST_OHEIGHT, NSS_TEST_BYTES_STRIDE);
     [self _testCopyTextureToBufferUsingOutputBuffer:buffer];
 }
 
 - (void)testCopyTextureToBufferWithIOSurface {
-    IOSurfaceRef surface = newIOSurfaceBufferBacking(NSS_TEST_OWIDTH, NSS_TEST_OHEIGHT, NSS_TEST_STRIDE);
+    IOSurfaceRef surface = newIOSurfaceBufferBacking(NSS_TEST_OWIDTH, NSS_TEST_OHEIGHT, NSS_TEST_BYTES_STRIDE);
     id<MTLBuffer> buffer = [device newBufferWithBytesNoCopy:IOSurfaceGetBaseAddress(surface)
                                                      length:IOSurfaceGetAllocSize(surface)
                                                     options:MTLResourceStorageModeShared
@@ -100,7 +101,7 @@
 - (void)_testCopyTextureToBufferUsingOutputBuffer:(id<MTLBuffer>)buffer {
     BOOL once = true;
     
-    NSSMetalProcessing* processor = [[NSSMetalProcessing alloc] initWithDevice:device scaleFactor:NSS_TEST_SCALE outputBufferStride:NSS_TEST_STRIDE];
+    NSSMetalProcessing* processor = [[NSSMetalProcessing alloc] initWithDevice:device scaleFactor:NSS_TEST_SCALE outputBufferStride:NSS_TEST_STRIDE(__fp16)];
     
     id<MTLTexture> colorTexture = [self newColorOutputTexture];
     id<MTLTexture> depthTexture = [self newDepthOutputTexture];
@@ -119,10 +120,10 @@
     
     uint16_t* bufferContents = (uint16_t*) [buffer contents];
     for (int i = 0; i < colorTexture.width * colorTexture.height; i++) {
-        XCTAssertEqual(*(bufferContents + (i*NSS_TEST_STRIDE) + 0), 0x1010);
-        XCTAssertEqual(*(bufferContents + (i*NSS_TEST_STRIDE) + 1), 0x1010);
-        XCTAssertEqual(*(bufferContents + (i*NSS_TEST_STRIDE) + 2), 0x1010);
-        XCTAssertEqual(*(bufferContents + (i*NSS_TEST_STRIDE) + 3), 0x0101);
+        XCTAssertEqual(*(bufferContents + (i*NSS_TEST_STRIDE(uint16_t)) + 0), 0x1010);
+        XCTAssertEqual(*(bufferContents + (i*NSS_TEST_STRIDE(uint16_t)) + 1), 0x1010);
+        XCTAssertEqual(*(bufferContents + (i*NSS_TEST_STRIDE(uint16_t)) + 2), 0x1010);
+        XCTAssertEqual(*(bufferContents + (i*NSS_TEST_STRIDE(uint16_t)) + 3), 0x0101);
         
         // fail if first ones does not match
         if (once) {
@@ -138,7 +139,7 @@
 
 - (void)testClearTexture {
     [self setContinueAfterFailure:NO];
-    NSSMetalProcessing* processor = [[NSSMetalProcessing alloc] initWithDevice:device scaleFactor:NSS_TEST_SCALE outputBufferStride:NSS_TEST_STRIDE];
+    NSSMetalProcessing* processor = [[NSSMetalProcessing alloc] initWithDevice:device scaleFactor:NSS_TEST_SCALE outputBufferStride:NSS_TEST_STRIDE(__fp16)];
     
     id<MTLTexture> texture = [self newColorInputTexture];
     
@@ -164,41 +165,6 @@
 
 // MARK: Utility
 
-- (id<MTLTexture>)newMotionInputTexture {
-    return [self newTextureWithPixelFormat:MTLPixelFormatRG16Float
-                                   andSize:MTLSizeMake(NSS_TEST_IWIDTH, NSS_TEST_IHEIGHT, 1)];
-}
-
-- (id<MTLTexture>)newColorInputTexture {
-    return [self newTextureWithPixelFormat:MTLPixelFormatRGBA16Float
-                                   andSize:MTLSizeMake(NSS_TEST_IWIDTH, NSS_TEST_IHEIGHT, 1)];
-}
-
-- (id<MTLTexture>)newColorOutputTexture {
-    return [self newTextureWithPixelFormat:MTLPixelFormatRGBA16Float
-                                   andSize:MTLSizeMake(NSS_TEST_IWIDTH, NSS_TEST_IHEIGHT, 1)];
-}
-
-- (id<MTLTexture>)newDepthInputTexture {
-    return [self newTextureWithPixelFormat:MTLPixelFormatR16Float
-                                   andSize:MTLSizeMake(NSS_TEST_IWIDTH, NSS_TEST_IHEIGHT, 1)];
-}
-
-- (id<MTLTexture>)newDepthOutputTexture {
-    return [self newTextureWithPixelFormat:MTLPixelFormatR16Float
-                                   andSize:MTLSizeMake(NSS_TEST_IWIDTH, NSS_TEST_IHEIGHT, 1)];
-}
-
-- (id<MTLTexture>)newTextureWithPixelFormat:(MTLPixelFormat)pixelFormat andSize:(MTLSize)size {
-    MTLTextureDescriptor* descriptor =
-        [MTLTextureDescriptor texture2DDescriptorWithPixelFormat:pixelFormat
-                                                           width:size.width
-                                                          height:size.height
-                                                       mipmapped:NO];
-    descriptor.storageMode |= MTLStorageModeShared;
-    id<MTLTexture> texture = [device newTextureWithDescriptor:descriptor];
-    
-    return texture;
-}
+TEST_CASE_TEXTURE_GENERATORS_API
 
 @end

@@ -13,8 +13,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, readonly) NSString* modelKey;
 @property (nonatomic, readonly) NSURL* modelURL;
-@property (nonatomic, readonly) NSUInteger preprocessingBufferStride;
-@property (nonatomic, readonly) NSUInteger decodingBufferStride;
+@property (nonatomic, readonly) NSUInteger preprocessingBufferBytesPerStride;
+@property (nonatomic, readonly) NSUInteger decodingBufferBytesPerStride;
 
 - (id)initWithInputWidth:(NSUInteger)inputWidth
              inputHeight:(NSUInteger)inputHeight

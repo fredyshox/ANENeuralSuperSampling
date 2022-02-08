@@ -8,6 +8,7 @@
 #import "NSSMultiFrameRGBDMotionPreprocessor.h"
 #import "NSSMetalProcessing.h"
 #import "NSSModel+Internal.h"
+#import "NSSUtility.h"
 
 #define CYCLIC_MODULO(a, m) ((a < 0) ? (m + (a % m)) % m : a % m)
 
@@ -24,11 +25,15 @@
 - (id)initWithDevice:(id<MTLDevice>)device descriptor:(NSSPreprocessorDescriptor*)descriptor {
     self = [super init];
     if (self) {
+        if (descriptor.outputBufferBytesPerStride % sizeof(__fp16) != 0) {
+            RAISE_EXCEPTION(@"OutputBufferStrideNotEven")
+        }
+        
         MTLTextureDescriptor *colorTextureDescriptor, *depthTextureDescriptor;
         
         self->_metalEngine = [[NSSMetalProcessing alloc] initWithDevice:device
                                                             scaleFactor:descriptor.scaleFactor
-                                                     outputBufferStride:descriptor.outputBufferStride];
+                                                     outputBufferStride:descriptor.outputBufferBytesPerStride / sizeof(__fp16)];
         self->_numberOfFrames = descriptor.frameCount;
         self->_descriptor = descriptor;
         self->_immediateBufferOffsets = malloc(sizeof(NSUInteger) * self->_numberOfFrames);
@@ -45,7 +50,7 @@
                                                                    width:descriptor.outputWidth
                                                                   height:descriptor.outputHeight
                                                                mipmapped:NO];
-            colorTextureDescriptor.usage |= MTLTextureUsageShaderWrite;
+            colorTextureDescriptor.usage |= (MTLTextureUsageShaderWrite | MTLTextureUsageRenderTarget);
             self->_immediateColorTexturesA[i] = [device newTextureWithDescriptor:colorTextureDescriptor];
             self->_immediateColorTexturesB[i] = [device newTextureWithDescriptor:colorTextureDescriptor];
             
@@ -54,7 +59,7 @@
                                                                    width:descriptor.outputWidth
                                                                   height:descriptor.outputHeight
                                                                mipmapped:NO];
-            depthTextureDescriptor.usage |= MTLTextureUsageShaderWrite;
+            depthTextureDescriptor.usage |= (MTLTextureUsageShaderWrite | MTLTextureUsageRenderTarget);
             self->_immediateDepthTexturesA[i] = [device newTextureWithDescriptor:depthTextureDescriptor];
             self->_immediateDepthTexturesB[i] = [device newTextureWithDescriptor:depthTextureDescriptor];
         }
@@ -70,7 +75,7 @@
                                              scaleFactor:model.scaleFactor
                                             channelCount:model.inputChannelCount
                                               frameCount:model.inputFrameCount
-                                      outputBufferStride:model.preprocessingBufferStride];
+                              outputBufferBytesPerStride:model.preprocessingBufferBytesPerStride];
     return [self initWithDevice:device descriptor:descriptor];
 }
 

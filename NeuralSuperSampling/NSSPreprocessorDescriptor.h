@@ -16,11 +16,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readwrite) NSUInteger scaleFactor;
 @property (nonatomic, readwrite) NSUInteger channelCount;
 @property (nonatomic, readwrite) NSUInteger frameCount;
-@property (nonatomic, readwrite) NSUInteger outputBufferStride;
+@property (nonatomic, readwrite) NSUInteger outputBufferBytesPerStride;
 
 - (id)initWithWidth:(NSUInteger)width height:(NSUInteger)height
         scaleFactor:(NSUInteger)scaleFactor channelCount:(NSUInteger)channelCount
-         frameCount:(NSUInteger)frameCount outputBufferStride:(NSUInteger)outputStride;
+         frameCount:(NSUInteger)frameCount outputBufferBytesPerStride:(NSUInteger)outputStride;
 - (NSUInteger)outputWidth;
 - (NSUInteger)outputHeight;
 

@@ -14,7 +14,8 @@
 #define NSS_TEST_OWIDTH  100
 #define NSS_TEST_OHEIGHT 100
 #define NSS_TEST_SCALE   2
-#define NSS_TEST_STRIDE  16
+#define NSS_TEST_BYTES_STRIDE  16
+#define NSS_TEST_STRIDE(type) (NSS_TEST_BYTES_STRIDE / sizeof(type))
 
 @interface NSSANEDecoderTests : XCTestCase
 
@@ -48,12 +49,12 @@
     
     __fp16 expectedValue = 0.5;
     size_t pixelCount = outputTexture.width * outputTexture.height;
-    IOSurfaceRef surface = newIOSurfaceBufferBacking(NSS_TEST_OWIDTH, NSS_TEST_OHEIGHT, NSS_TEST_STRIDE);
+    IOSurfaceRef surface = newIOSurfaceBufferBacking(NSS_TEST_OWIDTH, NSS_TEST_OHEIGHT, NSS_TEST_BYTES_STRIDE);
     NSSBuffer* buffer = [[NSSBuffer alloc] initWithIOSurface:surface];
     __fp16* rawBuffer = (__fp16*) buffer.dataPointer;
     for (size_t i = 0; i < pixelCount; i++) {
         for (size_t j = 0; j < 4; j++) {
-            *(rawBuffer + (i * NSS_TEST_STRIDE) + j) = (__fp16) expectedValue;
+            *(rawBuffer + (i * NSS_TEST_STRIDE(__fp16)) + j) = (__fp16) expectedValue;
         }
     }
     NSSANEDecoder* decoder = [[NSSANEDecoder alloc] initWithDevice:device yuvToRgbConversion:NO];

@@ -11,8 +11,8 @@
 @implementation NSSModel {
     NSString* _modelKey;
     NSURL* _modelURL;
-    NSUInteger _preprocessingBufferStride;
-    NSUInteger _decodingBufferStride;
+    NSUInteger _preprocessingBufferBytesPerStride;
+    NSUInteger _decodingBufferBytesPerStride;
 }
 
 - (id)initWithInputWidth:(NSUInteger)inputWidth
@@ -33,19 +33,19 @@
         self->_modelKey = key;
         self->_modelURL = url;
         // TODO figure out how to calculate that, this may be related to row/pixel alignment
-        self->_preprocessingBufferStride = 64;
-        self->_decodingBufferStride = 64;
+        self->_preprocessingBufferBytesPerStride = 64;
+        self->_decodingBufferBytesPerStride = 64;
     }
     
     return self;
 }
 
-- (NSUInteger)preprocessingBufferStride  {
-    return _preprocessingBufferStride;
+- (NSUInteger)preprocessingBufferBytesPerStride  {
+    return _preprocessingBufferBytesPerStride;
 }
 
-- (NSUInteger)decodingBufferStride {
-    return _decodingBufferStride;
+- (NSUInteger)decodingBufferBytesPerStride {
+    return _decodingBufferBytesPerStride;
 }
 
 - (NSUInteger)outputWidth {

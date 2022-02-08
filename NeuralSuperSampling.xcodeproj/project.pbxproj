@@ -47,6 +47,7 @@
 		E2801AFF27AC9A40006B548B /* NSSModel+EmbeddedModels.m in Sources */ = {isa = PBXBuildFile; fileRef = E2801AFC27AC9A40006B548B /* NSSModel+EmbeddedModels.m */; };
 		E2801B0027ACA15E006B548B /* NSSModel+Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = E2801AFA27AC63A6006B548B /* NSSModel+Internal.h */; };
 		E2801B0127ACA17A006B548B /* NSSDecoder.h in Headers */ = {isa = PBXBuildFile; fileRef = E2801AF427AC5A77006B548B /* NSSDecoder.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E2801B0327ADEDCC006B548B /* NSSMultiFrameRGBDMotionPreprocessorTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E2801B0227ADEDCC006B548B /* NSSMultiFrameRGBDMotionPreprocessorTests.m */; };
 		E282D7BE276CCAFC00E0D9D3 /* NSSRenderApi_ANEMetal.mm in Sources */ = {isa = PBXBuildFile; fileRef = E226B88E27598BC800E3900D /* NSSRenderApi_ANEMetal.mm */; };
 		E282D7BF276CCAFF00E0D9D3 /* NSSRenderApi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E226B89A2759934000E3900D /* NSSRenderApi.cpp */; };
 		E282D7C0276CCB0100E0D9D3 /* RenderingPlugin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E226B89127598C5D00E3900D /* RenderingPlugin.cpp */; };
@@ -154,6 +155,7 @@
 		E2801AFA27AC63A6006B548B /* NSSModel+Internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSSModel+Internal.h"; sourceTree = "<group>"; };
 		E2801AFB27AC9A40006B548B /* NSSModel+EmbeddedModels.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSSModel+EmbeddedModels.h"; sourceTree = "<group>"; };
 		E2801AFC27AC9A40006B548B /* NSSModel+EmbeddedModels.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSSModel+EmbeddedModels.m"; sourceTree = "<group>"; };
+		E2801B0227ADEDCC006B548B /* NSSMultiFrameRGBDMotionPreprocessorTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSSMultiFrameRGBDMotionPreprocessorTests.m; sourceTree = "<group>"; };
 		E282D7BA276CCAE300E0D9D3 /* NeuralSuperSamplingPlugin.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NeuralSuperSamplingPlugin.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
 		E2A6EE4C279CE53D009AC95C /* NSSANEDecoderTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSSANEDecoderTests.m; sourceTree = "<group>"; };
 		E2B5B689278B281C00AD1DB6 /* NeuralSuperSamplingCLI */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = NeuralSuperSamplingCLI; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -211,11 +213,11 @@
 		E2220A0B275EB1CA00DCF617 /* NeuralSuperSamplingTests */ = {
 			isa = PBXGroup;
 			children = (
+				E2801B0427ADEDDD006B548B /* Helpers */,
 				E2220A0C275EB1CA00DCF617 /* NSSUpscalerTests.m */,
 				E2309278279CCDD500799670 /* NSSMetalProcessingTests.m */,
 				E2A6EE4C279CE53D009AC95C /* NSSANEDecoderTests.m */,
-				E20C72F227A0AEDF00181FB8 /* NSSTestUtils.m */,
-				E20C72F427A0AFEC00181FB8 /* NSSTestUtils.h */,
+				E2801B0227ADEDCC006B548B /* NSSMultiFrameRGBDMotionPreprocessorTests.m */,
 			);
 			path = NeuralSuperSamplingTests;
 			sourceTree = "<group>";
@@ -281,16 +283,16 @@
 				E279FE47274C659800DC29D1 /* NSSPreprocessorDescriptor.m */,
 				E2709A562752BBF700C7DB23 /* NSSANEReconstructor.h */,
 				E2709A572752BBF700C7DB23 /* NSSANEReconstructor.m */,
+				E2801AF427AC5A77006B548B /* NSSDecoder.h */,
 				E2709A5A2753190300C7DB23 /* NSSANEDecoder.h */,
 				E2709A5B2753190300C7DB23 /* NSSANEDecoder.m */,
-				E2709A5E2753192500C7DB23 /* NSSUpscaler.h */,
-				E2709A5F2753192500C7DB23 /* NSSUpscaler.m */,
 				E2801AEB27AA0E57006B548B /* NSSPreprocessor.h */,
-				E2801AF427AC5A77006B548B /* NSSDecoder.h */,
-				E2709A642753C2CB00C7DB23 /* NSSUtility.h */,
-				E20C72F527A0BBDF00181FB8 /* NSSUtility.m */,
 				E2801AED27AA11F3006B548B /* NSSMultiFrameRGBDMotionPreprocessor.h */,
 				E2801AEE27AA11F3006B548B /* NSSMultiFrameRGBDMotionPreprocessor.m */,
+				E2709A5E2753192500C7DB23 /* NSSUpscaler.h */,
+				E2709A5F2753192500C7DB23 /* NSSUpscaler.m */,
+				E2709A642753C2CB00C7DB23 /* NSSUtility.h */,
+				E20C72F527A0BBDF00181FB8 /* NSSUtility.m */,
 				E2801AF527AC5E0C006B548B /* NSSModel.h */,
 				E2801AF627AC5E0C006B548B /* NSSModel.m */,
 				E2801AFA27AC63A6006B548B /* NSSModel+Internal.h */,
@@ -308,6 +310,15 @@
 				E2709A622753BA0900C7DB23 /* DecodeBuffer.metal */,
 			);
 			path = Shaders;
+			sourceTree = "<group>";
+		};
+		E2801B0427ADEDDD006B548B /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				E20C72F227A0AEDF00181FB8 /* NSSTestUtils.m */,
+				E20C72F427A0AFEC00181FB8 /* NSSTestUtils.h */,
+			);
+			path = Helpers;
 			sourceTree = "<group>";
 		};
 		E2B5B68A278B281C00AD1DB6 /* NeuralSuperSamplingCLI */ = {
@@ -522,6 +533,7 @@
 				E2220A0D275EB1CA00DCF617 /* NSSUpscalerTests.m in Sources */,
 				E2A6EE4D279CE53D009AC95C /* NSSANEDecoderTests.m in Sources */,
 				E2309279279CCDD500799670 /* NSSMetalProcessingTests.m in Sources */,
+				E2801B0327ADEDCC006B548B /* NSSMultiFrameRGBDMotionPreprocessorTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

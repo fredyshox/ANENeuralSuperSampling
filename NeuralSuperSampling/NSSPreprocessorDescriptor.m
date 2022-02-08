@@ -11,7 +11,7 @@
 
 - (id)initWithWidth:(NSUInteger)width height:(NSUInteger)height
         scaleFactor:(NSUInteger)scaleFactor channelCount:(NSUInteger)channelCount
-         frameCount:(NSUInteger)frameCount outputBufferStride:(NSUInteger)outputStride
+         frameCount:(NSUInteger)frameCount outputBufferBytesPerStride:(NSUInteger)outputStride
 {
     self = [super init];
     if (self) {
@@ -20,7 +20,7 @@
         _scaleFactor = scaleFactor;
         _channelCount = channelCount;
         _frameCount = frameCount;
-        _outputBufferStride = outputStride;
+        _outputBufferBytesPerStride = outputStride;
     }
     
     return self;
