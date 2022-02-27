@@ -11,14 +11,6 @@
 #import <NeuralSuperSampling/NSSDecoder.h>
 #import <NeuralSuperSampling/NSSModel.h>
 
-struct NSSInput {
-    NSObject<MTLTexture>* _Nonnull colorTexture;
-    NSObject<MTLTexture>* _Nonnull depthTexture;
-    NSObject<MTLTexture>* _Nullable motionTexture;
-};
-
-typedef struct NSSInput NSSInput;
-
 NS_ASSUME_NONNULL_BEGIN
 
 @interface NSSUpscaler : NSObject
@@ -28,7 +20,12 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly) NSSModel* model;
 
 - (id)initWithDevice:(id<MTLDevice>)device preprocessor:(id<NSSPreprocessor>)preprocessor decoder:(id<NSSDecoder>)decoder model:(NSSModel*)model;
-- (void)processInput:(NSSInput)input outputTexture:(id<MTLTexture>)outputTexture usingCommandBuffer:(id<MTLCommandBuffer>)commandBuffer;
+- (void)processInputColorTexture:(id<MTLTexture>)inputColorTexture
+               inputDepthTexture:(id<MTLTexture>)inputDepthTexture
+              inputMotionTexture:(id<MTLTexture>)inputMotionTexture
+                   outputTexture:(id<MTLTexture>)outputTexture
+              usingCommandBuffer:(id<MTLCommandBuffer>)commandBuffer
+NS_SWIFT_NAME(process(inputColorTexture:inputDepthTexture:inputMotionTexture:outputTexture:usingCommandBuffer:));
 
 @end
 

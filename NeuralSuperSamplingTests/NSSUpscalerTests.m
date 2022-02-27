@@ -63,11 +63,13 @@
     [self fillTextureWithZeros: depthTexture];
     [self fillTextureWithZeros: motionTexture];
     
-    NSSInput input = {colorTexture, depthTexture, motionTexture};
-    
     [self measureBlock:^{
         id<MTLCommandBuffer> buffer = [queue commandBuffer];
-        [upscaler processInput:input outputTexture:outputTexture usingCommandBuffer:buffer];
+        [upscaler processInputColorTexture:colorTexture
+                         inputDepthTexture:depthTexture
+                        inputMotionTexture:motionTexture
+                             outputTexture:outputTexture
+                        usingCommandBuffer:buffer];
         [buffer commit];
         [buffer waitUntilCompleted];
         XCTAssertNil(buffer.error);

@@ -32,9 +32,9 @@
         self->_scaleFactor = scaleFactor;
         self->_modelKey = key;
         self->_modelURL = url;
-        // TODO figure out how to calculate that, this may be related to row/pixel alignment
-        self->_preprocessingBufferBytesPerStride = 64;
-        self->_decodingBufferBytesPerStride = 64;
+        // stride is smallest multiple of 64 that convers tensor channel data
+        self->_preprocessingBufferBytesPerStride = (((inputChannelCount * inputFrameCount) / 64) + 1) * 64;
+        self->_decodingBufferBytesPerStride = 64; // outputChannels = 3 by default
     }
     
     return self;

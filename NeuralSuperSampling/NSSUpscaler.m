@@ -9,7 +9,6 @@
 #import "NSSModel+Internal.h"
 #import "NSSANEReconstructor.h"
 #import "NSSUtility.h"
-#import "Config.h"
 
 #import <IOSurface/IOSurface.h>
 #import <QuartzCore/QuartzCore.h>
@@ -150,22 +149,30 @@ IOSurfaceRef outputSurface(NSUInteger width, NSUInteger height, NSUInteger bytes
     return self;
 }
 
-- (void)processInput:(NSSInput)input outputTexture:(id<MTLTexture>)outputTexture usingCommandBuffer:(id<MTLCommandBuffer>)commandBuffer {
+- (void)processInputColorTexture:(id<MTLTexture>)inputColorTexture
+               inputDepthTexture:(id<MTLTexture>)inputDepthTexture
+              inputMotionTexture:(id<MTLTexture>)inputMotionTexture
+                   outputTexture:(id<MTLTexture>)outputTexture
+              usingCommandBuffer:(id<MTLCommandBuffer>)commandBuffer {
     NSInteger index = _frameIndex;
     NSUInteger preprocessingDoneValue = _eventValueA;
     NSUInteger aneDoneValue = _eventValueB;
     NSDebugLog(@"processInput called at: %ld, current value: %llu, preproc event: %lu, recon event: %lu", index, _preprocessingEvent.signaledValue, preprocessingDoneValue, aneDoneValue);
     [_preprocessingEvent notifyListener:_preprocessingEventListener atValue:preprocessingDoneValue block:^(id<MTLSharedEvent> _Nonnull event, uint64_t value) {
         NSError* aneError;
+        
+        START_TIME_MEASUREMENT(ANEReconstructionForwardPass)
         BOOL aneRes = [self->_reconstructor processWithError:&aneError];
+        END_TIME_MEASUREMENT(ANEReconstructionForwardPass)
+        
         NSDebugLog(@"Status for reconstruction: %d, error: %@, frame index: %ld, event value: %llu, buffer status: %lu", aneRes, aneError, index, value, [commandBuffer status]);
         event.signaledValue = aneDoneValue;
     }];
 
     [commandBuffer pushDebugGroup:@"nss.preprocessing"];
-    [_preprocessor preprocessWithColorTexture:input.colorTexture
-                                 depthTexture:input.depthTexture
-                                motionTexture:input.motionTexture
+    [_preprocessor preprocessWithColorTexture:inputColorTexture
+                                 depthTexture:inputDepthTexture
+                                motionTexture:inputMotionTexture
                                  outputBuffer:_immediateBuffer
                                    frameIndex:index
                                 commandBuffer:commandBuffer];

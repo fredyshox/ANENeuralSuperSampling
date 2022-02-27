@@ -74,10 +74,13 @@ void NSSRenderApi_ANEMetal::PerformSuperSampling(void* colorTexPtr, void* depthT
     id<MTLTexture> depthTexture = (__bridge id<MTLTexture>)depthTexPtr;
     id<MTLTexture> motionTexture = (__bridge id<MTLTexture>)motionTexPtr;
     id<MTLTexture> outputTexture = (__bridge id<MTLTexture>)outputTexPtr;
-    NSSInput input = {colorTexture, depthTexture, motionTexture};
     
     id<MTLCommandBuffer> currentCommandBuffer = _metalGraphics->CurrentCommandBuffer();
     _metalGraphics->EndCurrentCommandEncoder();
-    [_upscaler processInput:input outputTexture:outputTexture usingCommandBuffer:currentCommandBuffer];
+    [_upscaler processInputColorTexture:colorTexture
+                      inputDepthTexture:depthTexture
+                     inputMotionTexture:motionTexture
+                          outputTexture:outputTexture
+                     usingCommandBuffer:currentCommandBuffer];
 }
 #endif
