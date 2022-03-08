@@ -49,16 +49,19 @@ kernel void backward_image_warp(
     texture2d<half, access::write>  outTexture [[texture(2)]], // upsampled texture
     uint2 gid [[thread_position_in_grid]]
 ) {
-    constexpr sampler motionSampler(coord::normalized, filter::nearest);
-    constexpr sampler textureSampler(coord::pixel, filter::nearest);
+    constexpr sampler motionSampler(coord::normalized, filter::linear);
+    constexpr sampler textureSampler(coord::pixel, filter::linear);
     
     if ((gid.x >= outTexture.get_width()) || (gid.y >= outTexture.get_height())) {
         return;
     }
     
     float2 motionCoords = float2(float(gid.x) / inTexture.get_width(), float(gid.y) / inTexture.get_height());
-    half2 motionInGrid = motionTexture.sample(motionSampler, motionCoords).rg;
-    float2 warpedIndex = float2(gid) - float2(motionInGrid);
+    float2 motionInGrid = float2(motionTexture.sample(motionSampler, motionCoords).rg);
+    motionInGrid.r *= float(inTexture.get_width());
+    motionInGrid.g *= -1.0f * float(inTexture.get_height()); // in case of unity, origin is in bottom-left corner, but in metal top-left
+    
+    float2 warpedIndex = float2(gid) - motionInGrid;
     half4 interpolatedValue = inTexture.sample(textureSampler, warpedIndex);
     interpolatedValue.a = 1.0;
     
