@@ -10,16 +10,55 @@ import CoreGraphics
 import CoreImage
 import Metal
 
+extension MTLPixelFormat {
+    var bitsPerComponent: Int {
+        switch self {
+        case .bgra8Unorm:
+            return 8
+        case .rgba16Float:
+            return 16
+        default:
+            fatalError("Unsupported pixel format: \(self.rawValue)")
+        }
+    }
+    
+    var bytesPerPixel: Int {
+        switch self {
+        case .bgra8Unorm:
+            return 4
+        case .rgba16Float:
+            return 8
+        default:
+            fatalError("Unsupported pixel format: \(self.rawValue)")
+        }
+    }
+    
+    var bitmapInfo: CGBitmapInfo {
+        switch self {
+        case .bgra8Unorm:
+            return [
+                .byteOrder32Little, // reverse bytes => bgra -> argb
+                .init(rawValue: CGImageAlphaInfo.noneSkipFirst.rawValue)
+            ]
+        case .rgba16Float:
+            return [
+                .floatComponents,
+                .byteOrder16Little,
+                .init(rawValue: CGImageAlphaInfo.noneSkipLast.rawValue)
+            ]
+        default:
+            fatalError("Unsupported pixel format: \(self.rawValue)")
+        }
+    }
+}
+
 extension CGImage {
     static func fromTexture(_ texture: MTLTexture) -> CGImage {
-        guard texture.pixelFormat == .bgra8Unorm else {
-            fatalError("Pixel format of texture must be .bgra8Unorm")
-        }
-        
-        let allocationSize = texture.width * texture.height * 4
-        let bytesPerRow = texture.width * 4
-        let bitsPerComponent = 8
-        let bitsPerPixel = 32
+        let pixelFormat = texture.pixelFormat
+        let allocationSize = texture.width * texture.height * pixelFormat.bytesPerPixel
+        let bytesPerRow = texture.width * pixelFormat.bytesPerPixel
+        let bitsPerComponent = pixelFormat.bitsPerComponent
+        let bitsPerPixel = pixelFormat.bytesPerPixel * 8
         let bufferPointer = malloc(allocationSize)!
         
         texture.getBytes(
@@ -30,10 +69,7 @@ extension CGImage {
         )
         
         let colorSpace = CGColorSpaceCreateDeviceRGB()
-        let bitmapInfo: CGBitmapInfo = [
-            .byteOrder32Little, // reverse bytes => bgra -> argb
-            .init(rawValue: CGImageAlphaInfo.noneSkipFirst.rawValue)
-        ]
+        let bitmapInfo = pixelFormat.bitmapInfo
         guard
             let dataProvider = CGDataProvider(
                 dataInfo: nil,
@@ -67,7 +103,20 @@ extension CGImage {
             NSLog("Failed to save png image at: \(url)")
             return false
         }
-
+        
+        CGImageDestinationAddImage(destination, self, nil)
+        let res = CGImageDestinationFinalize(destination)
+        
+        return res
+    }
+    
+    @discardableResult
+    func saveToExr(at url: URL) -> Bool {
+        guard let destination = CGImageDestinationCreateWithURL(url as CFURL, "com.ilm.openexr-image" as CFString, 1, nil) else {
+            NSLog("Failed to save png image at: \(url)")
+            return false
+        }
+        
         CGImageDestinationAddImage(destination, self, nil)
         let res = CGImageDestinationFinalize(destination)
         

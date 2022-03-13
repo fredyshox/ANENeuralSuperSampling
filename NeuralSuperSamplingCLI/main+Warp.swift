@@ -19,15 +19,17 @@ extension SuperSampling {
             private let textureLoader: MTKTextureLoader
             private let processing: NSSMetalProcessing
             private let scaleFactor: Int
+            private let floatOutput: Bool
             private var immediateTexture: MTLTexture!
             private var outputTexture: MTLTexture!
-    
-            init(scaleFactor: UInt) {
+            
+            init(scaleFactor: UInt, floatOutput: Bool) {
                 self.device = MTLCreateSystemDefaultDevice()!
                 self.commandQueue = device.makeCommandQueue()!
                 self.textureLoader = MTKTextureLoader(device: device)
                 self.processing = NSSMetalProcessing(device: device, scaleFactor: scaleFactor, outputBufferStride: .zero)
                 self.scaleFactor = Int(scaleFactor)
+                self.floatOutput = floatOutput
             }
             
             private func setupInternalTexturesIfNeeded(inputTexture: MTLTexture) {
@@ -36,7 +38,7 @@ extension SuperSampling {
                 }
                 
                 let descriptor = MTLTextureDescriptor.texture2DDescriptor(
-                    pixelFormat: inputTexture.pixelFormat,
+                    pixelFormat: floatOutput ? MTLPixelFormat.rgba16Float : inputTexture.pixelFormat,
                     width: inputTexture.width * scaleFactor,
                     height: inputTexture.height * scaleFactor,
                     mipmapped: false
@@ -48,14 +50,14 @@ extension SuperSampling {
                 outputTexture = device.makeTexture(descriptor: descriptor)
             }
             
-            func processImage(colorURL: URL, motionURLs: [URL], outputURL: URL) throws {
-                let colorTexture = try textureLoader.newTexture(URL: colorURL, options: [.SRGB: false])
-                setupInternalTexturesIfNeeded(inputTexture: colorTexture)
+            func processImage(inputURL: URL, motionURLs: [URL], outputURL: URL) throws {
+                let inputTexture = try textureLoader.newTexture(URL: inputURL, options: [.SRGB: false])
+                setupInternalTexturesIfNeeded(inputTexture: inputTexture)
                 
                 let commandBuffer = commandQueue.makeCommandBuffer()!
                 processing.clear(immediateTexture, with: commandBuffer)
                 processing.clear(outputTexture, with: commandBuffer)
-                processing.upsampleInputTexture(colorTexture, outputTexture: immediateTexture, with: commandBuffer)
+                processing.upsampleInputTexture(inputTexture, outputTexture: motionURLs.isEmpty ? outputTexture : immediateTexture, with: commandBuffer)
                 
                 var motionTexture: MTLTexture!
                 for motionURL in motionURLs {
@@ -66,7 +68,12 @@ extension SuperSampling {
                 commandBuffer.commit()
                 commandBuffer.waitUntilCompleted()
                 
-                CGImage.fromTexture(outputTexture).saveToPng(at: outputURL)
+                let image = CGImage.fromTexture(outputTexture)
+                if outputURL.pathExtension == "exr" {
+                    image.saveToExr(at: outputURL)
+                } else {
+                    image.saveToPng(at: outputURL)
+                }
             }
         }
         
@@ -84,11 +91,17 @@ extension SuperSampling {
         @Option(help: "Scale factor")
         var scaleFactor: UInt = 2
         
+        @Flag(help: "Output .exr with floating point components")
+        var floatOutput: Bool = false
+        
+        @Flag(help: "Read depth images instead of color")
+        var depthMode: Bool = false
+        
         @Flag(name: .shortAndLong, help: "Enable verbose output")
         var verbose: Bool = false
         
         func run() throws {
-            let task = Task(scaleFactor: scaleFactor)
+            let task = Task(scaleFactor: scaleFactor, floatOutput: floatOutput)
             let filenameParser = FilenameParser()
             
             let inputDirectoryURL = URL(fileURLWithPath: inputDirectory)
@@ -97,38 +110,38 @@ extension SuperSampling {
             
             let inputURLs = try fm.contentsOfDirectory(at: inputDirectoryURL, includingPropertiesForKeys: nil, options: [])
             var motionFramesByIndex: [Int: URL] = [:]
-            var colorFramesByIndex: [Int: URL] = [:]
+            var inputFramesByIndex: [Int: URL] = [:]
             
             for fileURL in inputURLs {
                 guard fm.isFile(atPath: fileURL.path) else {
                     continue
                 }
                 
-                if let index = filenameParser.parseColorIndex(ofFilename: fileURL.lastPathComponent) {
-                    colorFramesByIndex[index] = fileURL
+                if !depthMode, let index = filenameParser.parseColorIndex(ofFilename: fileURL.lastPathComponent) {
+                    inputFramesByIndex[index] = fileURL
+                } else if depthMode, let index = filenameParser.parseDepthIndex(ofFilename: fileURL.lastPathComponent) {
+                    inputFramesByIndex[index] = fileURL
                 } else if let index = filenameParser.parseMotionIndex(ofFilename: fileURL.lastPathComponent) {
                     motionFramesByIndex[index] = fileURL
                 }
             }
             
-            vPrint("Discovered \(colorFramesByIndex.count) color images, \(motionFramesByIndex.count) motion images at \(inputDirectory)")
+            vPrint("Discovered \(inputFramesByIndex.count) \(!depthMode ? "color" : "depth") images, \(motionFramesByIndex.count) motion images at \(inputDirectory)")
             
-            for (index, fileURL) in colorFramesByIndex {
+            for (index, fileURL) in inputFramesByIndex {
                 let motionURLs = ((index+1)..<(index+frameCount)).compactMap { motionFramesByIndex[$0] }
-                guard motionURLs.count == (frameCount - 1) else {
-                    continue
-                }
                 
-                for warpCount in 1...motionURLs.count {
+                for warpCount in 0...motionURLs.count {
                     let outputURL = outputDirectoryURL
                         .appendingPathComponent(fileURL.deletingPathExtension().lastPathComponent + "+\(warpCount)")
-                        .appendingPathExtension(fileURL.pathExtension)
+                        .appendingPathExtension(floatOutput ? "exr" : fileURL.pathExtension)
                     guard !fm.fileExists(atPath: outputURL.path) else {
-                        throw CommandError(message: "File at \(outputURL) already exist")
+                        vPrint("File at \(outputURL) already exists")
+                        continue
                     }
                     
                     vPrint("Performing \(warpCount) warps to image at: \(fileURL)")
-                    try task.processImage(colorURL: fileURL, motionURLs: Array(motionURLs.prefix(upTo: warpCount)), outputURL: outputURL)
+                    try task.processImage(inputURL: fileURL, motionURLs: Array(motionURLs.prefix(upTo: warpCount)), outputURL: outputURL)
                     vPrint("Output image written to: \(outputURL)")
                 }
             }
