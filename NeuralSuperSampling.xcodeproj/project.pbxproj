@@ -21,6 +21,8 @@
 		E226B89927598F6E00E3900D /* IUnityInterface.h in Headers */ = {isa = PBXBuildFile; fileRef = E226B89627598F6E00E3900D /* IUnityInterface.h */; };
 		E226B89B2759934000E3900D /* NSSRenderApi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E226B89A2759934000E3900D /* NSSRenderApi.cpp */; };
 		E2309279279CCDD500799670 /* NSSMetalProcessingTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E2309278279CCDD500799670 /* NSSMetalProcessingTests.m */; };
+		E240F46427F264560084CD96 /* NeuralSuperResolution3F720p4PF.mlmodelc in Resources */ = {isa = PBXBuildFile; fileRef = E240F46327F264560084CD96 /* NeuralSuperResolution3F720p4PF.mlmodelc */; };
+		E240F46527F264560084CD96 /* NeuralSuperResolution3F720p4PF.mlmodelc in Resources */ = {isa = PBXBuildFile; fileRef = E240F46327F264560084CD96 /* NeuralSuperResolution3F720p4PF.mlmodelc */; };
 		E2709A552752B36A00C7DB23 /* Preprocessing.metal in Sources */ = {isa = PBXBuildFile; fileRef = E2709A542752B36A00C7DB23 /* Preprocessing.metal */; };
 		E2709A582752BBF700C7DB23 /* NSSANEReconstructor.h in Headers */ = {isa = PBXBuildFile; fileRef = E2709A562752BBF700C7DB23 /* NSSANEReconstructor.h */; };
 		E2709A592752BBF700C7DB23 /* NSSANEReconstructor.m in Sources */ = {isa = PBXBuildFile; fileRef = E2709A572752BBF700C7DB23 /* NSSANEReconstructor.m */; };
@@ -66,8 +68,8 @@
 		E2B5B691278B283000AD1DB6 /* NeuralSuperSampling.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E279FE32274C4EFA00DC29D1 /* NeuralSuperSampling.framework */; };
 		E2B5B692278B283000AD1DB6 /* NeuralSuperSampling.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E279FE32274C4EFA00DC29D1 /* NeuralSuperSampling.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		E2B5B69B278B31D300AD1DB6 /* ArgumentParser in Frameworks */ = {isa = PBXBuildFile; productRef = E2B5B69A278B31D300AD1DB6 /* ArgumentParser */; };
-		E2C9853A278F7E0E0005E789 /* NeuralSuperResolution3F720p4PF.mlmodelc in Resources */ = {isa = PBXBuildFile; fileRef = E2C98539278F7E0E0005E789 /* NeuralSuperResolution3F720p4PF.mlmodelc */; };
-		E2C9853B278F7E0E0005E789 /* NeuralSuperResolution3F720p4PF.mlmodelc in Resources */ = {isa = PBXBuildFile; fileRef = E2C98539278F7E0E0005E789 /* NeuralSuperResolution3F720p4PF.mlmodelc */; };
+		E2E3FCA327F115380068E3C1 /* AppleNeuralEngine.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = E2E3FCA127F115380068E3C1 /* AppleNeuralEngine.tbd */; };
+		E2E3FCA427F1154B0068E3C1 /* AppleNeuralEngine.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = E2E3FCA127F115380068E3C1 /* AppleNeuralEngine.tbd */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -132,6 +134,7 @@
 		E226B89A2759934000E3900D /* NSSRenderApi.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = NSSRenderApi.cpp; sourceTree = "<group>"; };
 		E226B89C275A65BE00E3900D /* PlatformBase.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PlatformBase.h; sourceTree = "<group>"; };
 		E2309278279CCDD500799670 /* NSSMetalProcessingTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSSMetalProcessingTests.m; sourceTree = "<group>"; };
+		E240F46327F264560084CD96 /* NeuralSuperResolution3F720p4PF.mlmodelc */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = NeuralSuperResolution3F720p4PF.mlmodelc; sourceTree = "<group>"; };
 		E2709A542752B36A00C7DB23 /* Preprocessing.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Preprocessing.metal; sourceTree = "<group>"; };
 		E2709A562752BBF700C7DB23 /* NSSANEReconstructor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NSSANEReconstructor.h; sourceTree = "<group>"; };
 		E2709A572752BBF700C7DB23 /* NSSANEReconstructor.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSSANEReconstructor.m; sourceTree = "<group>"; };
@@ -164,7 +167,7 @@
 		E2A6EE4C279CE53D009AC95C /* NSSANEDecoderTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSSANEDecoderTests.m; sourceTree = "<group>"; };
 		E2B5B689278B281C00AD1DB6 /* NeuralSuperSamplingCLI */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = NeuralSuperSamplingCLI; sourceTree = BUILT_PRODUCTS_DIR; };
 		E2B5B68B278B281C00AD1DB6 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
-		E2C98539278F7E0E0005E789 /* NeuralSuperResolution3F720p4PF.mlmodelc */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = NeuralSuperResolution3F720p4PF.mlmodelc; sourceTree = "<group>"; };
+		E2E3FCA127F115380068E3C1 /* AppleNeuralEngine.tbd */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.text-based-dylib-definition"; path = AppleNeuralEngine.tbd; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -180,6 +183,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E2E3FCA427F1154B0068E3C1 /* AppleNeuralEngine.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -187,6 +191,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E2E3FCA327F115380068E3C1 /* AppleNeuralEngine.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -274,6 +279,7 @@
 		E279FE34274C4EFA00DC29D1 /* NeuralSuperSampling */ = {
 			isa = PBXGroup;
 			children = (
+				E2E3FCA027F1150C0068E3C1 /* Frameworks */,
 				E2DC515D275FB41400D81D07 /* Resources */,
 				E22209FF275EA16100DCF617 /* AppleNeuralEngine */,
 				E24B18B22755A74E003C635A /* Plugin */,
@@ -345,9 +351,17 @@
 		E2DC515D275FB41400D81D07 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				E2C98539278F7E0E0005E789 /* NeuralSuperResolution3F720p4PF.mlmodelc */,
+				E240F46327F264560084CD96 /* NeuralSuperResolution3F720p4PF.mlmodelc */,
 			);
 			path = Resources;
+			sourceTree = "<group>";
+		};
+		E2E3FCA027F1150C0068E3C1 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				E2E3FCA127F115380068E3C1 /* AppleNeuralEngine.tbd */,
+			);
+			path = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -515,7 +529,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E2C9853A278F7E0E0005E789 /* NeuralSuperResolution3F720p4PF.mlmodelc in Resources */,
+				E240F46427F264560084CD96 /* NeuralSuperResolution3F720p4PF.mlmodelc in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -523,7 +537,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E2C9853B278F7E0E0005E789 /* NeuralSuperResolution3F720p4PF.mlmodelc in Resources */,
+				E240F46527F264560084CD96 /* NeuralSuperResolution3F720p4PF.mlmodelc in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -785,7 +799,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				FRAMEWORK_SEARCH_PATHS = /System/Library/PrivateFrameworks/;
+				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"NSS_TIMING=1",
 					"DEBUG=1",
@@ -800,15 +814,18 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/Frameworks",
 				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/NeuralSuperSampling/Frameworks",
+				);
 				MARKETING_VERSION = 1.0;
 				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = (
-					"-framework",
-					AppleNeuralEngine,
-				);
+				OTHER_LDFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = com.raczy.NeuralSuperSampling;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = macosx;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 			};
 			name = Debug;
@@ -825,7 +842,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				FRAMEWORK_SEARCH_PATHS = /System/Library/PrivateFrameworks/;
+				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)";
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
@@ -835,12 +852,14 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/Frameworks",
 				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/NeuralSuperSampling/Frameworks",
+				);
 				MARKETING_VERSION = 1.0;
 				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = (
-					"-framework",
-					AppleNeuralEngine,
-				);
+				OTHER_LDFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = com.raczy.NeuralSuperSampling;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -860,6 +879,10 @@
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_NSPrincipalClass = "";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/NeuralSuperSampling/Frameworks",
+				);
 				MARKETING_VERSION = 1.0;
 				OTHER_LDFLAGS = (
 					"-framework",
@@ -885,6 +908,10 @@
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_NSPrincipalClass = "";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/NeuralSuperSampling/Frameworks",
+				);
 				MARKETING_VERSION = 1.0;
 				OTHER_LDFLAGS = (
 					"-framework",

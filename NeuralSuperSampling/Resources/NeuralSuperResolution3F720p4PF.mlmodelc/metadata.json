@@ -54,7 +54,7 @@
         "type" : "MultiArray"
       }
     ],
-    "generatedClassName" : "superres_fixed",
+    "generatedClassName" : "superres_prebuilt_preproc",
     "method" : "predict"
   }
 ]

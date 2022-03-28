@@ -10,25 +10,11 @@
 #import <dlfcn.h>
 #import <TargetConditionals.h>
 
-static void *aneFrameworkLibHandle;
-
 @implementation NSSANEReconstructor {
     _ANEModel* model;
     _ANEClient* client;
     _ANEIOSurfaceObject* inputSurface;
     _ANEIOSurfaceObject* outputSurface;
-}
-
-+ (void)initialize {
-    [_ANEClient initialize];
-    [_ANEClient sharedConnection];
-    
-    #if TARGET_OS_IOS
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        aneFrameworkLibHandle = dlopen("/System/Library/PrivateFrameworks/AppleNeuralEngine.framework/AppleNeuralEngine", RTLD_NOW);
-    });
-    #endif
 }
 
 - (id)initWithMilUrl:(NSURL*)milUrl modelKey:(NSString*)key {
